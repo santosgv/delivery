@@ -114,10 +114,12 @@ def ver_carrinho(request):
             {'imagem': prod[0].img.url,
              'nome': prod[0].nome_produto,
              'quantidade': i['quantidade'],
+             'observacoes': i['observacoes'],
              'preco': i['preco'],
              'id': i['id_produto']
              }
         )
+        print(dados_motrar)
     total = sum([float(i['preco']) for i in request.session['carrinho']])
 
     return render(request, 'carrinho.html', {'dados': dados_motrar,

@@ -25,7 +25,7 @@
     <h1 class="titulo subTituloProduto">Ingredientes: </h1>
     <h3 style="color: gray;">{{produto.ingredientes}}</h3>
 
-    <h1 class="titulo subTituloProduto">Escolha seus adicionais: </h1>
+    <h1 class="titulo subTituloProduto">Adicionais: </h1>
 
     <form method="POST" action="{% url 'add_carrinho' %}">{% csrf_token %}
     <input name="id" style="display: none;" type="text" value="{{produto.id}}">
