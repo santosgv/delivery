@@ -1,56 +1,69 @@
 
+:root{
+    --vermelho:#b30808;
+    --preta:#141414;
+    --branco:#fff;
+    --cinza:#aaa;
+    --rosa:#f8c2ec;
+    --rosaforte:#bd219b;
+}
+
+
 .corBorda{
-    background-color: #F6DCE1;
+    /* .corBorda  cor do navbar */
+    background-color: var(--rosa);
 }
 
 .observacoes{
-
-    border: 1px solid #E58383;
+/* label das observaços dentro do produto */
+    border: 1px solid var(--rosaforte);
     width: 200px;
 
 }
 
 .tituloProduto{
-
+/* tamano do titulo do produto no produto.html */
 font-size: 60px;
 }
 
 .subTituloProduto{
-
+/* tamano do subTituloProduto do produto no produto.html */
     font-size: 40px;
 }
 
 .bordaBottom{
-
+/* espaço entre o botao */
 border-bottom: 1px solid gray;
 padding-bottom: 20px;
 
 }
 
 .botao{
-
-    background-color: #F69E9E;
-    color: white;
+/* botao de compra */
+    background-color: var(--rosa);
+    color: var(--branco);
     padding: 8px;
     border-radius: 15px;
     transition: 0.2s;
 }
 
 body{
-    background-color: #FAF9F9;
+    /* fundo */
+    background-color:var(--branco);
 }
 
 .titulo{
-
-    color: #E58383;
+     /* Cor do titulo */
+    color: var(--rosaforte);
 
 }
 
 .botao:hover{
-    color: white;
+    /* houver do botao de compra inicial */
+    color: var(--branco);
     text-decoration: none;
     padding: 10px;
-    border: 1px solid #E64747;
+    border: 1px solid var(--rosaforte);
 }
 
 .cont{
@@ -67,23 +80,19 @@ body{
     transition: all 2s;
   }
 
-.cont:hover img {
-    -moz-transform: scale(1.8);
-    -webkit-transform: scale(1.8);
-    transform: scale(1.8);
-  }
+
 
 input[type=checkbox] {
     position: relative;
     cursor: pointer;
     border: 1px solid #F2A1A1;
-    color: black;
+    color: rgb(226, 13, 13);
 
     }
 
 input[type=checkbox]:before {
     content: "";
-    border-radius: 15px;
+    border-radius: 20px;
     border: 1px solid #F2A1A1;
     display: block;
     position: absolute;
@@ -91,8 +100,8 @@ input[type=checkbox]:before {
     height: 25px;
     top: 0;
     left: 0;
-    color: black;
-    background-color: #FAEDED;
+    color: var(--vermelho);
+    background-color: var(--branco);
     }
 
 input[type=checkbox]:checked:after {
