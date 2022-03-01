@@ -13,8 +13,7 @@ class itemPedidoInline(admin.TabularInline):
     readonly_fields = ('produto', 'quantidade', 'preco', 'descricao', 'adicionais',)
     model = ItemPedido
     extra = 1
-    #TODO
-    # falta colocar a observaçao do pedido
+
 
 
 class PedidoAdmin(admin.ModelAdmin):
