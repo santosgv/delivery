@@ -12,7 +12,7 @@ class CupomDescontoAdmin(admin.ModelAdmin):
 class itemPedidoInline(admin.TabularInline):
     readonly_fields = ('produto', 'quantidade', 'preco', 'descricao', 'adicionais',)
     model = ItemPedido
-    extra = 1
+    extra = 0
 
 
 
