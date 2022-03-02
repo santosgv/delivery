@@ -2,7 +2,6 @@
 
 {% block 'head' %}
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
-
 <script>$(document).ready(function() {
 
     function limpa_formulário_cep() {
@@ -100,7 +99,9 @@
           <br>
           <h3 class="rosa">Cidade*:</h3>
           <select class="form-control">
-            <option selected>Santa rita do passa quatro</option>
+            <option selected>Contagem</option>
+              <option >Belo Horizonte</option>
+              <option >Ribeirao das Neves</option>
           </select>
 
           <br>
@@ -135,17 +136,18 @@
     </div>
 
     <div class="col-sm fundo">
-        <div class="btn btn-info btn-lg" onclick="pagar_entrega()">Pagar na entrega</div>
+        <div class="rosa">
+            <h4> O pagamento sera realizado no momento da entrega</h4>
+        </div>
     </div>
 
 
 </div>
 <hr>
 <br>
-
 <div class="row">
     <div class="col-sm fundo">
-        <h1 id="total">Total: R${{total}}0</h1>
+        <h1 id="total">Total: R$ {{total}}0</h1>
     </div>
 
     <div class="col-sm fundo">
@@ -170,7 +172,7 @@
 
     <div id="troco">
         <h3 class="rosa">troco para*:</h3>
-        <input type="text" class="form-control" placeholder="Número" name="troco_para">
+        <input type="text" class="form-control" placeholder="ex.:10" name="troco_para">
     </div>
     <br>
     <button onclick="envia()" class="btn btn-success btn-lg">Efetuar pedido!</button>
@@ -215,3 +217,4 @@ function validaCupom(){
 
 
 {%endblock%}
+

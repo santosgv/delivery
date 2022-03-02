@@ -60,6 +60,7 @@ def finalizar_pedido(request):
                     produto=v['produto'],
                     quantidade=v['quantidade'],
                     preco=v['preco'],
+                    descricao=v['observacoes'],
                     adicionais=str(v['adicionais'])
                 ) for v in listaCarrinho
 

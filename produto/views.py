@@ -102,6 +102,7 @@ def add_carrinho(request):
 
     request.session['carrinho'].append(data)
     request.session.save()
+
     return redirect(f'/ver_carrinho')
 
 
@@ -119,13 +120,12 @@ def ver_carrinho(request):
              'id': i['id_produto']
              }
         )
-        print(dados_motrar)
     total = sum([float(i['preco']) for i in request.session['carrinho']])
 
     return render(request, 'carrinho.html', {'dados': dados_motrar,
                                              'total': total,
                                              'carrinho': len(request.session['carrinho']),
-                                             'categorias': categorias,
+                                             'categorias': categorias
                                              })
 def remover_carrinho(request, id):
     request.session['carrinho'].pop(id)
