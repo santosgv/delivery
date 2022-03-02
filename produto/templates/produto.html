@@ -6,14 +6,15 @@
 
 {% block 'conteudo'%}
 <div style="align-items: center; text-align: center;">
+    <br>
     <div class="container">
-        {% if erro == '1'%}
-        <br>
-        <br>
-        <div class="alert alert-danger" role="alert">
-            Confira a quantidade de adicionais selecionados
+        {% if messages%}
+        {% for i in messages%}
+        <div class="alert {{i.tags}}" role="alert">
+            {{i}}
         </div>
-    {%endif%}
+        {%endfor%}
+        {%endif%}
 
     </div>
     <img class="tamanhoImg" style="margin-top: 20px;" src="/media/{{produto.img}}">

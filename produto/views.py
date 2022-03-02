@@ -1,7 +1,8 @@
+from django.contrib.messages import constants
 from django.shortcuts import render,redirect
 from django.http import HttpResponse
 from .models import Produto, Categoria, Opcoes, Adicional
-
+from django.contrib import messages
 
 def home(request):
     if not request.session.get('carrinho'):
@@ -32,6 +33,7 @@ def produto(request, id):
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
+
     erro = request.GET.get('erro')
     produto = Produto.objects.filter(id=id)[0]
     categorias = Categoria.objects.all()
@@ -78,6 +80,7 @@ def add_carrinho(request):
             aprovado = False
 
     if not aprovado:
+        messages.add_message(request, constants.ERROR, 'Confira a quantidade de adicionais selecionados')
         return redirect(f'/produto/{id}?erro=1')
 
     for i, j in adicionais:
