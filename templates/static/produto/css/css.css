@@ -123,8 +123,26 @@ h4 {
 color:red;
 }
 
+footer{
+background-color: var(--rosa);
+}
+
+.rodape{
+background-color: var(--rosa);
+}
+
+
+
 .tamanhoImg{
     width: 500px;
+}
+
+
+@media screen (min-width: 300px) {
+  .img-loja {
+    width: 100px;
+    height: 30px;
+  }
 }
 
 @media (max-width: 1200px)

@@ -14,6 +14,9 @@ def home(request):
                                         'categorias': categorias,
                                         })
 
+def loja(request):
+    return render(request,'loja.html')
+
 def categorias(request, id):
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
