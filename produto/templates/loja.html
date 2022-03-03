@@ -1,13 +1,16 @@
 {%extends 'base.html'%}
+
+
+{% block 'conteudo' %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
 </head>
 
-     {% block 'conteudo' %}
+
      <br>
-<section id="quemSomos">
+        <section id="quemSomos">
           <div class="container-fluid quemSomos margin text-center">
               <img id="img-loja" src="/static/img/loja.jpg" class="rounded-circle" width="50%" height="700px" alt="Loja-delivery">
               <br>
@@ -16,7 +19,5 @@
 
           </div>
       </section>
-      {% endblock %}
-
-
 </html>
+ {% endblock %}

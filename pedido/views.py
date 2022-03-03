@@ -4,17 +4,19 @@ from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Pedido, ItemPedido, CupomDesconto
 from produto.models import Produto, Categoria
+from django.contrib.messages import constants
+from django.contrib import messages
 
 
 def finalizar_pedido(request):
     if request.method == "GET":
         categorias = Categoria.objects.all()
-        erro = request.GET.get('erro')
+
         total = sum([float(i['preco']) for i in request.session['carrinho']])
         return render(request, 'finalizar_pedido.html', {'carrinho': len(request.session['carrinho']),
                                                          'categorias': categorias,
                                                          'total': total,
-                                                         'erro': erro})
+                                                         })
     else:
         if len(request.session['carrinho']) > 0:
             x = request.POST
@@ -70,7 +72,8 @@ def finalizar_pedido(request):
             request.session.save()
             return render(request, 'pedido_realizado.html')
         else:
-            return redirect('/pedidofinalizar_pedido/?erro=1')
+            messages.add_message(request, constants.ERROR, 'Escolha ao menos um produto antes de efetuar a compra!')
+            return redirect('/pedidofinalizar_pedido/')
 
 def validaCupom(request):
     cupom = request.POST.get('cupom')

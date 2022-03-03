@@ -74,12 +74,13 @@
   <br>
   <h1 class="rosa">Ao clicar em "Efetuar pedido" será confirmado sua compra</h1>
   <hr>
-  {%if erro == '1'%}
-    <div class="alert alert-danger" role="alert">
-        Escolha ao menos um produto antes de efetuar a compra!
-    </div>
-
-  {%endif%}
+ {% if messages%}
+        {% for i in messages%}
+        <div class="alert {{i.tags}}" role="alert">
+            {{i}}
+        </div>
+        {%endfor%}
+        {%endif%}
 
 
     <div class="row">

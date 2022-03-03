@@ -16,7 +16,15 @@ def home(request):
                                         })
 
 def loja(request):
-    return render(request,'loja.html')
+    if not request.session.get('carrinho'):
+        request.session['carrinho'] = []
+        request.session.save()
+    produtos = Produto.objects.all()
+    categorias = Categoria.objects.all()
+    return render(request, 'loja.html', {'produtos': produtos,
+                                        'carrinho': len(request.session['carrinho']),
+                                        'categorias': categorias,
+                                        })
 
 def categorias(request, id):
     if not request.session.get('carrinho'):
@@ -34,13 +42,13 @@ def produto(request, id):
         request.session['carrinho'] = []
         request.session.save()
 
-    erro = request.GET.get('erro')
+
     produto = Produto.objects.filter(id=id)[0]
     categorias = Categoria.objects.all()
     return render(request, 'produto.html', {'produto': produto,
                                             'carrinho': len(request.session['carrinho']),
                                             'categorias': categorias,
-                                            'erro': erro})
+                                           })
 
 
 def add_carrinho(request):
@@ -81,7 +89,7 @@ def add_carrinho(request):
 
     if not aprovado:
         messages.add_message(request, constants.ERROR, 'Confira a quantidade de adicionais selecionados')
-        return redirect(f'/produto/{id}?erro=1')
+        return redirect(f'/produto/{id}')
 
     for i, j in adicionais:
         for k in j:
