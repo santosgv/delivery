@@ -2,4 +2,5 @@
 .idea/misc.xml
 imersaoPython/__pycache__/urls.cpython-310.pyc
 *.pyc
-*venv
+venv/
+.env
