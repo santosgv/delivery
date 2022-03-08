@@ -1,6 +1,11 @@
-*.pyc
 .idea/misc.xml
-imersaoPython/__pycache__/urls.cpython-310.pyc
+*.__pycache__
 *.pyc
 venv/
 .env
+.gitignore
+imersaoPython/__pycache__/settings.cpython-38.pyc
+pedido/__pycache__/views.cpython-38.pyc
+produto/__pycache__/views.cpython-38.pyc
+pedido/__pycache__/admin.cpython-38.pyc
+imersaoPython/__pycache__/settings.cpython-38.pyc
