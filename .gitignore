@@ -4,6 +4,7 @@
 venv/
 .env
 .gitignore
+db.sqlite3
 imersaoPython/__pycache__/settings.cpython-38.pyc
 pedido/__pycache__/views.cpython-38.pyc
 produto/__pycache__/views.cpython-38.pyc
