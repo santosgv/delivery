@@ -8,7 +8,15 @@
     --rosaforte:#bd219b;
 }
 
-
+.my-cart-icon {
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+    border: double medium #e5e3d6;
+    padding: 10px 10px;
+    cursor: pointer; 
+}
+  
 .corBorda{
     /* .corBorda  cor do navbar */
     background-color: var(--rosa);
