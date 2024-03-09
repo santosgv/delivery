@@ -41,3 +41,26 @@ class Produto(models.Model):
 
     def __str__(self):
         return self.nome_produto
+    
+class Contato(models.Model):
+    Nome = models.CharField(max_length=100,null=True, blank=True)
+    Email = models.EmailField()
+    Telefone = models.IntegerField()
+    Mensagem = models.TextField(max_length=500)
+    Lido = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return self.Nome
+    
+    class Meta:
+        verbose_name_plural = "Contatos"
+
+class Email(models.Model):
+    email = models.EmailField()
+    ativo = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.email
+    
+    class Meta:
+        verbose_name_plural = "Newsletter"

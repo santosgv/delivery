@@ -29,8 +29,8 @@
                 Categorias
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                 {% for i in categorias %}
-                <a class="dropdown-item" href="{% url 'categoria' i.id%}">{{i}}</a>
+                 {% for categoria in categorias %}
+                <a class="dropdown-item" href="{% url 'categoria' categoria.categoria %}">{{categoria.categoria}} <span class="badge badge-danger">{{categoria.quantidade}}</span></a>
                 {%endfor%}
               </div>
             </li>
@@ -40,7 +40,7 @@
               </a>
               </li>
               <li>
-                  <a class="nav-link " href="#Contatos"  role="button">
+                  <a class="nav-link " href="{% url 'contact'%}"  role="button">
                       Contatos
                   </a>
               </li>
@@ -55,6 +55,15 @@
       <a class="nav-item my-cart-icon" href="{%url 'ver_carrinho'%}">{{carrinho}}<svg xmlns="http://www.w3.org/2000/svg"width="1.2em" height="1.2em" fill="currentColor" class="bi bi-cart3" viewBox="0 0 16 16">
         <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .49.598l-1 5a.5.5 0 0 1-.465.401l-9.397.472L4.415 11H13a.5.5 0 0 1 0 1H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l.84 4.479 9.144-.459L13.89 4H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
         </svg></a>
+        <div class="container">
+          {% if messages %}
+              {% for message in messages %}
+                  <div class="text-center alert {{message.tags}}">
+                      {{message}}
+                  </div>
+              {% endfor %}
+          {% endif %}
+      </div>
         <br>
      <!-- Footer -->
 <footer class="bg-body-tertiary text-center">
@@ -96,13 +105,13 @@
 
     <!-- Section: Form -->
     <section class="">
-      <form action="">
+      <form method="POST"  action="{% url 'formulario' %}">{% csrf_token %} 
         <!--Grid row-->
         <div class="row d-flex justify-content-center">
           <!--Grid column-->
           <div class="col-auto">
             <p class="pt-2">
-              <strong>Sign up for our newsletter</strong>
+              <strong>Não perca nossas promoções</strong>
             </p>
           </div>
           <!--Grid column-->
@@ -111,8 +120,8 @@
           <div class="col-md-5 col-12">
             <!-- Email input -->
             <div data-mdb-input-init class="form-outline mb-4">
-              <input type="email" id="form5Example24" class="form-control" />
-              <label class="form-label" for="form5Example24">Email address</label>
+              <form  action="" class="form-inline">
+                <input type="email" name="email" id="email" class="form-control" placeholder="Email" />
             </div>
           </div>
           <!--Grid column-->
@@ -120,8 +129,8 @@
           <!--Grid column-->
           <div class="col-auto">
             <!-- Submit button -->
-            <button data-mdb-ripple-init type="submit" class="btn btn-outline mb-4">
-              Subscribe
+            <button data-mdb-ripple-init type="submit" class="btn btn-outline mb-4 btn-primary">
+              Se inscrever
             </button>
           </div>
           <!--Grid column-->

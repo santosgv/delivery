@@ -1,27 +1,39 @@
 {%extends 'base.html'%}
 
 {% block 'conteudo'%}
-<div class="container">
-    <div class="row">
+<div class="container-fluid">
+    <div class="row justify-content-center">
     {% for produto in produtos %}
 
         {% if produto.ativo %}
-      <div class="col-sm" style="width: 18rem;">
-        <div class="cont">
-            <img style="width: 350px; margin-top: 20px;" src="/media/{{produto.img}}">
+      <div class="card carde" style="width: 18rem;">
+        <img src="{{produto.img.url}}" class="card-img-top" alt="{{produto.img.url}}">
+        <div class="card-body">
+          <h5 class="card-title text-center">{{produto.nome_produto}}</h5>
         </div>
-        <h1 style="width: 350px;" class="nome titulo bordaBottom">{{produto.nome_produto}}</h1>
-        <h2 class="rosa">Descrição:</h2>
-        <h5 style="width: 350px; color: gray;" class="descricao bordaBottom">{{produto.descricao}}</h5>
-        <h1 class="rosa">R$ {{produto.preco}}0</h1>
-        <br>
-            <a style="margin-top: 20px;" href="{% url 'produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
-        <br>
+        <ul class="list-group list-group-flush text-center">
+          <li class="list-group-item" style="color: gray;">Descrição: {{produto.descricao}}</li>
+          <li class="list-group-item">R$ {{produto.preco}}0</li>
+        </ul>
+        <div class="card-body text-center">
+          <a style="margin-top: 20px;" href="{% url 'produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
+        </div>
       </div>
       {% endif %}
       {% endfor %}
 
-
     </div>
+    <br>
+    <nav aria-label="Page navigation example">
+      <ul class="pagination">
+          {% if produtos.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ produtos.previous_page_number }}">Voltar</a></li>
+        {% endif %}
+        <li class="page-item"><a class="page-link" href="#">{{ produtos.number }}:{{ produtos.paginator.num_pages }}</a></li>
+        {% if produtos.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ produtos.next_page_number }}">Proximo</a></li>
+        {% endif %}
+      </ul>
+    </nav>
   </div>
 {%endblock%}

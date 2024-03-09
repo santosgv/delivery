@@ -1,7 +1,15 @@
 {% extends 'base.html'%}
+{% load static %}
+{% load cache %}
 
+{% block 'title' %}
+Checkout
+{% endblock %}
 {% block 'head' %}
+
+
 <script src="https://code.jquery.com/jquery-3.4.1.js"></script>
+
 <script>$(document).ready(function() {
 
     function limpa_formulário_cep() {
@@ -62,12 +70,11 @@
 
 </script>
 
-
 {%endblock%}
 
 
 
-{%block 'conteudo'%}
+{%block 'body'%}
 <div class="container">
 
 
@@ -87,43 +94,48 @@
 
         <div class="col-sm fundo">
 
-        <form method="POST" action="{% url 'finalizar_pedido' %}">{% csrf_token %}
+        <form method="POST" action="{% url 'Core:finalizar_pedido' %}">{% csrf_token %}
 
           <br>
-          <h3 class="rosa">Nome*:</h3>
+          <h3 class="rosa">Nome<span class="importante">*</span>:</h3>
           <input type="text" required="required" class="form-control" placeholder="Nome" name="nome">
-
           <br>
-          <h3 class="rosa">Cep:</h3>
-          <input type="text" class="form-control" id="cep" placeholder="CEP" name="cep">
-
+          <h3 class="rosa">Cep<span class="importante">*</span>:</h3>
+          <input type="text" class="form-control" required="required" data-mask='00000-000' id="cep" placeholder="CEP" name="cep">
           <br>
-          <h3 class="rosa">Cidade*:</h3>
+          <!-- <h3 class="rosa">Cidade*:</h3>
           <select class="form-control">
             <option selected>Contagem</option>
               <option >Belo Horizonte</option>
               <option >Ribeirao das Neves</option>
           </select>
-
-          <br>
-          <h3 class="rosa">Rua*:</h3>
+        -->
+          <h3 class="rosa">Rua<span class="importante">*</span>:</h3>
           <input type="text" required="required" class="form-control" placeholder="Rua" id="rua" name="rua">
 
           <br>
-          <h3 class="rosa">Número*:</h3>
+          <h3 class="rosa">Número<span class="importante">*</span>:</h3>
           <input type="text" required="required" class="form-control" placeholder="Número" name="numero">
 
           <br>
-          <h3 class="rosa">Bairro*:</h3>
-          <input type="text" required="required" class="form-control" placeholder="Bairro" id="bairro" name="bairro">
+          <h3 class="rosa">Bairro<span class="importante">*</span>:</h3>
+          <select class="form-control" required="required" class="form-control" placeholder="Bairro" id="inputbairro" name="bairro" onchange="freteBairro()">
+            {% cache 180 bairros %}
+            <option value="" selected>Selecione seu Bairro</option>
+            {% for bairro in bairros %}
+              <option value="{{bairro.id}}">{{bairro}}</option>
+              {% endfor%}
+              {% endcache %}
+          </select>
+          
 
           <br>
           <h3 class="rosa">Ponto de referência:</h3>
           <input type="text" class="form-control" placeholder="Ponto de referência" name="pt_referencia">
 
           <br>
-          <h3 class="rosa">Telefone*:</h3>
-          <input type="text" required="required" class="form-control" placeholder="Telefone" name="telefone">
+          <h3 class="rosa">Telefone<span class="importante">*</span>:</h3>
+          <input type="text" required="required" data-mask="(00)00000-0000" class="form-control" placeholder="Telefone" name="telefone">
           <br>
 
 
@@ -149,6 +161,9 @@
 <div class="row">
     <div class="col-sm fundo">
         <h1 id="total">Total: R$ {{total}}0</h1>
+        <p id="msg_frete"></p>
+        <h1 id="frete_msg">Frete : {{Bairro}}0</h1>
+        <input id="frete" type="text" style="display: none;" name="frete" value="{{Bairro}}0">
     </div>
 
     <div class="col-sm fundo">
@@ -165,15 +180,15 @@
 
 <div id="pagamento">
 
-    <h3 class="rosa">Meio de pagamento*:</h3>
+    <h3 class="rosa">Meio de pagamento<span class="importante">*</span>:</h3>
     <select name="meio_pagamento" class="form-control" onchange="javascript:dinheiro(this);">
-      <option value="1">Dinheiro</option>
-      <option value="2">Cartão</option>
+        <option value="1">Dinheiro / Pix </option>
+        <option value="2">Cartão</option>
     </select>
 
     <div id="troco">
-        <h3 class="rosa">troco para*:</h3>
-        <input type="text" class="form-control" placeholder="ex.:10" name="troco_para">
+        <h3 class="rosa">troco para</h3>
+        <input type="text" class="form-control"  placeholder="ex.:10" name="troco_para">
     </div>
     <br>
     <button onclick="envia()" class="btn btn-success btn-lg">Efetuar pedido!</button>
@@ -183,12 +198,13 @@
 </form>
 
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
 <script>
 function validaCupom(){
    cupom = document.getElementById('inputCupom').value
    $.ajax({
-            url: "{% url 'validaCupom'%}",
+            url: "{% url 'Core:validaCupom'%}",
             method: 'post',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -215,7 +231,34 @@ function validaCupom(){
 }
 </script>
 
-
+<script>
+    function freteBairro(){
+        bairro = document.getElementById('inputbairro').value
+       $.ajax({
+                url: "{% url 'Core:freteBairro'%}",
+                method: 'post',
+                data: {
+                    'csrfmiddlewaretoken': '{{ csrf_token }}',
+                    'bairro': bairro
+                },
+                success: function(resposta){
+                  resposta = JSON.parse(resposta)
+                  frete_msg = document.getElementById('frete_msg')
+                  div_frete = document.getElementById('frete')
+                  msg = document.getElementById('msg_frete')
+                  if(resposta['status'] == 0){
+                    div_frete.value = resposta['frete']
+                    frete_msg.innerHTML = 'Frete Por R$' +' '+resposta['frete']
+                    msg.innerHTML = "O valor de Frete para essa Localidade"
+                    msg.style.color = 'red'
+                    msg.style.fontSize ='24px'
+                  }
+    
+    
+                }
+    
+            })
+    }
+    </script>
 
 {%endblock%}
-

@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block 'title' %}
+Contatos
+{% endblock %}
+
+ {% block 'cabeca' %}
+ {% endblock %}
+
+ {% block 'conteudo' %}
+ <br>
+ <div class="container">
+    {% if messages %}
+        {% for message in messages %}
+            <div class="text-center alert {{message.tags}}">
+                {{message}}
+            </div>
+        {% endfor %}
+    {% endif %}
+</div>
+ <div class="container-fluid">
+    <div class="justify-content-center text-center">
+        <main class="mb-4">
+            <div class="container px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                       <p style="color:var(--vermelho)"> Quer entrar em contato? Preencha o formulário abaixo para me enviar uma mensagem e entrarei em contato com você o mais breve possível!</p>
+                        <div class="my-5">
+                            <form method="POST"  id="contactForm" action="{% url 'contact'%}">{% csrf_token %}
+                                <div class="form-floating">
+                                    <label for="name" style="color:var(--vermelho)">Nome</label>
+                                    <input class="form-control" id="name" name="name" type="text" placeholder="Entre com seu Nome" required  />
+                                    <div class="invalid-feedback" data-sb-feedback="name:required">Um nome e Obrigatorio!</div>
+                                </div>
+                                <br>
+                                <div class="form-floating">
+                                    <label for="email" style="color:var(--vermelho)">Endereco de Email</label>
+                                    <input class="form-control" id="email" name="email" type="email" placeholder="Entre com seu email..." required />
+                                    <div class="invalid-feedback" data-sb-feedback="email:required">Um email e Obrigatorio!.</div>
+                                    <div class="invalid-feedback" data-sb-feedback="email:email">Email nao valido.</div>
+                                </div>
+                                <br>
+                                <div class="form-floating">
+                                    <label for="phone" style="color:var(--vermelho)">Telefone</label>
+                                    <input class="form-control" id="phone" name="phone" type="tel" placeholder="Entre com seu Telefone..." required />
+                                    <div class="invalid-feedback" data-sb-feedback="phone:required">Um Telefone e Obrigatorio!</div>
+                                </div>
+                                <br>
+                                <div class="form-floating">
+                                    <div class="invalid-feedback" data-sb-feedback="message:required">Uma mensagem e Obrigatorio</div>
+                                    <textarea class="form-control" id="message" name="message" placeholder="Entre com sua Mensagem aqui..." style="height: 12rem" rows="4" cols="50" maxlength="500" required></textarea>
+                                    <br>
+                                </div>
+                                <br/>
+                                <div class="text-center">
+                                <button class="btn btn-success text-uppercase" id="submitButton" type="submit">Enviar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+ </div>
+ </div>
+ {% endblock %}

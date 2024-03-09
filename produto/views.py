@@ -1,39 +1,61 @@
 from django.contrib.messages import constants
-from django.shortcuts import render,redirect
 from django.http import HttpResponse
-from .models import Produto, Categoria, Opcoes, Adicional
+from django.shortcuts import render,redirect,get_object_or_404
+from django.core.paginator import Paginator
+from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+import datetime
+from django.db.models import Count
+import logging
+
+logger = logging.getLogger('MyApp')
+
+def get_categorias_com_contagem():
+    cached_categorias = cache.get('all_categorias_com_contagem')
+    if cached_categorias is None:
+        categorias = Categoria.objects.annotate(quantidade=Count('produto')).values('id', 'categoria', 'quantidade')
+        cached_categorias = [{'id': cat['id'], 'categoria': cat['categoria'], 'quantidade': cat['quantidade']} for cat in categorias]
+        cache.set('all_categorias_com_contagem', cached_categorias, timeout=1800)
+    return cached_categorias
 
 def home(request):
+    categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
-    produtos = Produto.objects.all()
-    categorias = Categoria.objects.all()
-    return render(request, 'home.html', {'produtos': produtos,
+    produtos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True).all().order_by('-id')
+    pagina = Paginator(produtos,25)
+    pg_number = request.GET.get('page')
+    paginas = pagina.get_page(pg_number)
+    return render(request, 'home.html', {'produtos': paginas,
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,
                                         })
 
 def loja(request):
+    categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
-    produtos = Produto.objects.all()
-    categorias = Categoria.objects.all()
-    return render(request, 'loja.html', {'produtos': produtos,
+    return render(request, 'loja.html', {
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,
                                         })
 
-def categorias(request, id):
+def categorias(request, nome):
+    categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
-    produtos = Produto.objects.filter(categoria_id = id)
-    categorias = Categoria.objects.all()
+    categoria_nome = get_object_or_404(Categoria, categoria=nome)
+    produtos =Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,categoria=categoria_nome).all().order_by('-id')
+    pagina = Paginator(produtos,25)
+    pg_number = request.GET.get('page')
+    paginas = pagina.get_page(pg_number)
 
-    return render(request, 'home.html', {'produtos': produtos,
+    return render(request, 'home.html', {'produtos': paginas,
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,})
 
@@ -44,7 +66,7 @@ def produto(request, id):
 
 
     produto = Produto.objects.filter(id=id)[0]
-    categorias = Categoria.objects.all()
+    categorias = get_categorias_com_contagem()
     return render(request, 'produto.html', {'produto': produto,
                                             'carrinho': len(request.session['carrinho']),
                                             'categorias': categorias,
@@ -141,7 +163,57 @@ def ver_carrinho(request):
                                              'carrinho': len(request.session['carrinho']),
                                              'categorias': categorias
                                              })
+
 def remover_carrinho(request, id):
     request.session['carrinho'].pop(id)
     request.session.save()
     return redirect('/ver_carrinho')
+
+def contact(request):
+    categorias = get_categorias_com_contagem()
+    if not request.session.get('carrinho'):
+        request.session['carrinho'] = []
+        request.session.save()
+        
+    if request.method == "GET":
+        categorias = get_categorias_com_contagem()
+        status = request.GET.get('status')
+        return render(request,'contact.html',{'status':status,'categorias':categorias,
+                                              'carrinho': len(request.session['carrinho']),
+                                              })
+    else:
+        NOME = request.POST.get('name')
+        EMAIL = request.POST.get('email')
+        TELEFONE = request.POST.get('phone')
+        MENSAGEM = request.POST.get('message')
+        
+        new_contato= Contato(
+            Nome=NOME,
+            Email=EMAIL,
+            Telefone=TELEFONE,
+            Mensagem=MENSAGEM
+        )
+        new_contato.save()
+        messages.add_message(request, constants.SUCCESS, 'Enviado com sucesso')
+        return redirect("contact")
+    
+def formulario(request):
+    if request.method =="POST":
+        email = request.POST.get('email')
+        valida = Email.objects.filter(email=email)
+        if valida.exists():
+            messages.add_message(request, constants.ERROR, 'Email Ja cadastrado')
+            logger.info(f'Email Ja cadastrado {email} '+str(datetime.datetime.now())+' horas!')
+            return redirect("/")
+        cadastrar = Email.objects.create(
+            email=email
+        )
+        cadastrar.save()
+        messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso')
+        return redirect("/")
+    
+def unsubscriber(request,id):
+    email = Email.objects.get(id=id)
+    email.ativo =False
+    email.save()
+    return HttpResponse('Cancelado sua Inscriçao')

@@ -7,6 +7,13 @@
     --rosa:#f8c2ec;
     --rosaforte:#bd219b;
 }
+.pagination{
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+    justify-content: center;
+}
+
 
 .my-cart-icon {
     position: fixed;
@@ -16,6 +23,10 @@
     padding: 10px 10px;
     cursor: pointer; 
 }
+
+.carde {
+    margin: 8px;
+  }
   
 .corBorda{
     /* .corBorda  cor do navbar */
@@ -24,9 +35,15 @@
 
 .observacoes{
 /* label das observaços dentro do produto */
+    align-items: center;
     border: 1px solid var(--rosaforte);
     width: 200px;
+    
 
+}
+
+.obs{
+    height: 100px;
 }
 
 .tituloProduto{
