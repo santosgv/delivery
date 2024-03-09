@@ -1,8 +1,9 @@
 from django.urls import path
-from . import views
+from . import views,htmx_views
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
+
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -16,5 +17,8 @@ urlpatterns = [
     path("remover_carrinho/<int:id>", views.remover_carrinho, name='remover_carrinho'),
 ]
 
-urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+htmx_patterns =[
+    path('search/',htmx_views.search, name='search')
+]
+
+#urlpatterns += htmx_patterns

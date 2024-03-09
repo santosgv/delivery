@@ -32,6 +32,7 @@ class Produto(models.Model):
     descricao = models.TextField()
     ingredientes = models.CharField(max_length=2000)
     adicionais = models.ManyToManyField(Adicional, blank=True)
+    promocao=models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
 
     @mark_safe

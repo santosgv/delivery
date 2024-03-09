@@ -74,7 +74,7 @@ Checkout
 
 
 
-{%block 'body'%}
+{%block 'conteudo'%}
 <div class="container">
 
 
@@ -94,7 +94,7 @@ Checkout
 
         <div class="col-sm fundo">
 
-        <form method="POST" action="{% url 'Core:finalizar_pedido' %}">{% csrf_token %}
+        <form method="POST" action="{% url 'finalizar_pedido' %}">{% csrf_token %}
 
           <br>
           <h3 class="rosa">Nome<span class="importante">*</span>:</h3>
@@ -204,7 +204,7 @@ Checkout
 function validaCupom(){
    cupom = document.getElementById('inputCupom').value
    $.ajax({
-            url: "{% url 'Core:validaCupom'%}",
+            url: "{% url 'validaCupom'%}",
             method: 'post',
             data: {
                 'csrfmiddlewaretoken': '{{ csrf_token }}',
@@ -235,7 +235,7 @@ function validaCupom(){
     function freteBairro(){
         bairro = document.getElementById('inputbairro').value
        $.ajax({
-                url: "{% url 'Core:freteBairro'%}",
+                url: "",
                 method: 'post',
                 data: {
                     'csrfmiddlewaretoken': '{{ csrf_token }}',

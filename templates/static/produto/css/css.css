@@ -1,4 +1,10 @@
 
+@font-face {
+    font-family:'minhafonte';
+    src:url("../produto/font/angrybirds-regular.ttf");
+}
+    
+
 :root{
     --vermelho:#b30808;
     --preta:#141414;
@@ -7,11 +13,18 @@
     --rosa:#f8c2ec;
     --rosaforte:#bd219b;
 }
+
+
 .pagination{
     display: flex;
     padding-left: 0;
     list-style: none;
     justify-content: center;
+}
+
+.promo{
+    font-size:40px;
+    color:var(--preta);
 }
 
 
@@ -180,3 +193,4 @@ background-color: var(--rosa);
     }
 
 }
+

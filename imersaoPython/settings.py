@@ -19,6 +19,12 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "https://mundocoloridokids.com.br/",
+    "http://154.49.246.53/"
+]
+
 
 # Application definition
 
@@ -109,6 +115,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+DATE_FORMAT = "d-m-Y"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
@@ -138,6 +145,18 @@ MESSAGE_TAGS = {
     constants.INFO: 'alert-info',
     constants.WARNING: 'alert-warning',
 }
+
+
+DEFAULT_FROM_EMAIL=config('EMAIL_HOST_USER')
+EMAIL_BACKEND ='django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST_USER= config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD= config('EMAIL_HOST_PASSWORD')
+EMAIL_USE_TLS=True
+EMAIL_PORT =587
+EMAIL_HOST='smtp.office365.com'
+
+
+
 
 LOGGING = {
     'version': 1,

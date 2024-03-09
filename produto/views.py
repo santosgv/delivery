@@ -26,12 +26,14 @@ def home(request):
         request.session['carrinho'] = []
         request.session.save()
     produtos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True).all().order_by('-id')
+    promos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,promocao=True).all().order_by('-id')
     pagina = Paginator(produtos,25)
     pg_number = request.GET.get('page')
     paginas = pagina.get_page(pg_number)
     return render(request, 'home.html', {'produtos': paginas,
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,
+                                        'promos':promos
                                         })
 
 def loja(request):
