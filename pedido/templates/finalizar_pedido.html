@@ -12,7 +12,7 @@ Checkout
         function limpa_formulario_cep() {
             // Limpa valores do formulário de cep.
             document.getElementById("rua").value = "";
-            document.getElementById("bairro").value = "";
+            document.getElementById("inputbairro").value = "";
         }
 
         // Quando o campo cep perde o foco.
@@ -29,7 +29,7 @@ Checkout
                 if(validacep.test(cep)) {
                     // Preenche os campos com "..." enquanto consulta o webservice.
                     document.getElementById("rua").value = "...";
-                    document.getElementById("bairro").value = "...";
+                    document.getElementById("inputbairro").value = "...";
 
                     // Consulta o webservice viacep.com.br/
                     fetch("https://viacep.com.br/ws/" + cep + "/json/")
@@ -38,7 +38,7 @@ Checkout
                             if (!("erro" in dados)) {
                                 // Atualiza os campos com os valores da consulta.
                                 document.getElementById("rua").value = dados.logradouro;
-                                document.getElementById("bairro").value = dados.bairro;
+                                document.getElementById("inputbairro").value = dados.bairro;
                             } else {
                                 // CEP pesquisado não foi encontrado.
                                 limpa_formulario_cep();
@@ -111,14 +111,12 @@ Checkout
           <br>
           <h3 class="rosa">Bairro<span class="importante">*</span>:</h3>
 
-        
-          <select class="form-control" required="required" class="form-control" placeholder="Bairro" id="bairro" name="bairro" onchange="freteBairro()">
-          
+          <select class="form-control" required="required" class="form-control" placeholder="Bairro" id="inputbairro" name="bairro" onchange="freteBairro()">
             <option value="" selected>Selecione seu Bairro</option>
-      
-              <option value="Veneza">Veneza</option>
-              <option value="Belvedere">Belvedere</option>
-              <option value="Centro">Centro</option>
+            {% for bairro in bairros %}
+              <option value="{{bairro.id}}">{{bairro}}</option>
+              {% endfor%}
+
   
           </select>
           
@@ -237,30 +235,28 @@ Checkout
 <script>
     function freteBairro(){
         bairro = document.getElementById('inputbairro').value
-       $.ajax({
-                url: "",
-                method: 'post',
-                data: {
-                    'csrfmiddlewaretoken': '{{ csrf_token }}',
-                    'bairro': bairro
-                },
-                success: function(resposta){
-                  resposta = JSON.parse(resposta)
-                  frete_msg = document.getElementById('frete_msg')
-                  div_frete = document.getElementById('frete')
-                  msg = document.getElementById('msg_frete')
-                  if(resposta['status'] == 0){
-                    div_frete.value = resposta['frete']
-                    frete_msg.innerHTML = 'Frete Por R$' +' '+resposta['frete']
-                    msg.innerHTML = "O valor de Frete para essa Localidade"
-                    msg.style.color = 'red'
-                    msg.style.fontSize ='24px'
-                  }
-    
-    
-                }
-    
-            })
+        fetch("{% url 'freteBairro'%}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ bairro: bairro })
+        })
+        .then(response => response.json())
+        .then(resposta => {
+            const frete_msg = document.getElementById('frete_msg');
+            const msg_frete = document.getElementById('msg_frete');
+            if (resposta['status'] == 1) {
+                frete_msg.innerHTML = 'Total: R$ {{total}}0';
+                msg_frete.innerHTML = "Cupom inválido";
+                msg_frete.style.color = 'red';
+            } else {
+                frete_msg.innerHTML = 'Por R$' +  resposta['frete'];
+                msg_frete.style.color = 'green';
+            }
+        })
+        .catch(error => console.error('Erro:', error));
     }
     </script>
 

@@ -1,7 +1,9 @@
 from django.contrib import admin
 from .models import ItemPedido, Pedido, CupomDesconto
 from django.http import HttpResponse
+from produto.models import Bairro
 
+admin.site.register(Bairro)
 
 @admin.register(CupomDesconto)
 class CupomDescontoAdmin(admin.ModelAdmin):

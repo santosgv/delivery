@@ -7,6 +7,13 @@ class Categoria(models.Model):
 
     def __str__(self):
         return self.categoria
+    
+class Bairro(models.Model):
+    Nome = models.CharField(max_length=100)
+    Frete = models.FloatField()
+
+    def __str__(self):
+        return self.Nome
 
 class Opcoes(models.Model):
     nome = models.CharField(max_length=100)

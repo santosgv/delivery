@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-from produto.models import Produto
+from produto.models import Produto,Bairro
 
 
 class CupomDesconto(models.Model):
@@ -24,7 +24,7 @@ class Pedido(models.Model):
     cep = models.CharField(max_length=50, blank=True)
     rua = models.CharField(max_length=200)
     numero = models.CharField(max_length=10)
-    bairro = models.CharField(max_length=200, blank=True)
+    bairro = models.ForeignKey(Bairro, on_delete=models.DO_NOTHING)
     telefone = models.CharField(max_length=30)
     entregue = models.BooleanField(default=False)
 

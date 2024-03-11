@@ -1,0 +1,25 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block branding %}
+
+{%endblock%}
+
+
+
+{%block extrastyle%}
+
+{%endblock%}
+
+{% block pretitle %}
+{% endblock %}
+
+{% if user.is_authenticated %}
+{% block content_subtitle %}
+
+{% include 'particials\htmx_componenntes\aviso.html' %}
+{% endblock %}
+
+{% else %}
+nada
+{% endif %}

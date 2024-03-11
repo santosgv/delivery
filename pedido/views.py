@@ -1,9 +1,9 @@
-from django.db.models.fields import CommaSeparatedIntegerField
+
 import json
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Pedido, ItemPedido, CupomDesconto
-from produto.models import Produto, Categoria
+from produto.models import Produto, Categoria,Bairro,Bairro
 from django.contrib.messages import constants
 from django.contrib import messages
 from django.views.decorators.cache import cache_page
@@ -21,11 +21,12 @@ def get_categorias_com_contagem():
 def finalizar_pedido(request):
     if request.method == "GET":
         categorias = get_categorias_com_contagem()
-
+        bairros = Bairro.objects.all()
         total = sum([float(i['preco']) for i in request.session['carrinho']])
         return render(request, 'finalizar_pedido.html', {'carrinho': len(request.session['carrinho']),
                                                          'categorias': categorias,
                                                          'total': total,
+                                                         'bairros':bairros
                                                          })
     else:
         if len(request.session['carrinho']) > 0:
@@ -61,7 +62,7 @@ def finalizar_pedido(request):
                             cep=x['cep'],
                             rua=x['rua'],
                             numero=x['numero'],
-                            bairro=x['bairro'],
+                            bairro=Bairro.objects.get(id=x['bairro']),
                             telefone=x['telefone'],
                             )
             pedido.save()
@@ -103,3 +104,13 @@ def validaCupom(request):
     else:
 
         return HttpResponse(json.dumps({'status': 1}))
+
+
+def freteBairro(request):
+    data = json.loads(request.body)
+    id_bairro = data.get('bairro')
+    bairro = Bairro.objects.get(id=id_bairro)
+    data_json =json.dumps({'status': 0,
+                                    'frete': bairro.Frete,
+                                    })
+    return HttpResponse(data_json)
