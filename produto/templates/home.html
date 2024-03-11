@@ -1,8 +1,11 @@
 {%extends 'base.html'%}
-
+{% load cache %}
 {% block 'conteudo'%}
+
+{% cache 3600 cache_produto-1 %}
 <div class="container-fluid">
     <div class="row justify-content-center">
+
     {% for produto in produtos %}
 
         {% if produto.ativo %}
@@ -37,4 +40,6 @@
       </ul>
     </nav>
   </div>
+  {% endcache %}
+  
 {%endblock%}

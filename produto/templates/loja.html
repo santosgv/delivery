@@ -1,7 +1,8 @@
 {%extends 'base.html'%}
-
+{% load cache %}
 
 {% block 'conteudo' %}
+{% cache 3600 cache_sobre-1 %}
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -20,4 +21,6 @@
           </div>
       </section>
 </html>
+
+{% endcache %}
  {% endblock %}

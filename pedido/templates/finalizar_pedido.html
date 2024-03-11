@@ -183,8 +183,9 @@ Checkout
         <input type="text" class="form-control"  placeholder="ex.:10" name="troco_para">
     </div>
     <br>
+    <div class="text-center">
     <button onclick="envia()" class="btn btn-success btn-lg">Efetuar pedido!</button>
-
+</div>
 </div>
 
 </form>
@@ -248,11 +249,10 @@ Checkout
             const frete_msg = document.getElementById('frete_msg');
             const msg_frete = document.getElementById('msg_frete');
             if (resposta['status'] == 1) {
-                frete_msg.innerHTML = 'Total: R$ {{total}}0';
-                msg_frete.innerHTML = "Cupom inválido";
+                msg_frete.innerHTML = "Bairro inválido";
                 msg_frete.style.color = 'red';
             } else {
-                frete_msg.innerHTML = 'Por R$' +  resposta['frete'];
+                frete_msg.innerHTML = 'Frete : R$' +  resposta['frete'];
                 msg_frete.style.color = 'green';
             }
         })

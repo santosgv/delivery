@@ -6,7 +6,7 @@ from .models import Pedido, ItemPedido, CupomDesconto
 from produto.models import Produto, Categoria,Bairro,Bairro
 from django.contrib.messages import constants
 from django.contrib import messages
-from django.views.decorators.cache import cache_page
+from django.db import transaction
 from django.core.cache import cache
 from django.db.models import Count
 
@@ -18,6 +18,7 @@ def get_categorias_com_contagem():
         cache.set('all_categorias_com_contagem', cached_categorias, timeout=1800)
     return cached_categorias
 
+@transaction.atomic
 def finalizar_pedido(request):
     if request.method == "GET":
         categorias = get_categorias_com_contagem()
@@ -86,6 +87,7 @@ def finalizar_pedido(request):
             messages.add_message(request, constants.ERROR, 'Escolha ao menos um produto antes de efetuar a compra!')
             return redirect('/pedidofinalizar_pedido/')
 
+@transaction.atomic
 def validaCupom(request):
     data = json.loads(request.body)
     codigo = data.get('cupom')
@@ -105,7 +107,7 @@ def validaCupom(request):
 
         return HttpResponse(json.dumps({'status': 1}))
 
-
+@transaction.atomic
 def freteBairro(request):
     data = json.loads(request.body)
     id_bairro = data.get('bairro')

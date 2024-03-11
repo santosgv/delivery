@@ -4,7 +4,7 @@ from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email
 from django.contrib import messages
-from django.views.decorators.cache import cache_page
+from django.db import transaction
 from django.core.cache import cache
 import datetime
 from django.db.models import Count
@@ -74,7 +74,7 @@ def produto(request, id):
                                             'categorias': categorias,
                                            })
 
-
+@transaction.atomic
 def add_carrinho(request):
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
@@ -171,6 +171,7 @@ def remover_carrinho(request, id):
     request.session.save()
     return redirect('/ver_carrinho')
 
+@transaction.atomic
 def contact(request):
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
@@ -198,7 +199,8 @@ def contact(request):
         new_contato.save()
         messages.add_message(request, constants.SUCCESS, 'Enviado com sucesso')
         return redirect("contact")
-    
+
+@transaction.atomic   
 def formulario(request):
     if request.method =="POST":
         email = request.POST.get('email')
@@ -214,6 +216,7 @@ def formulario(request):
         messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso')
         return redirect("/")
     
+@transaction.atomic
 def unsubscriber(request,id):
     email = Email.objects.get(id=id)
     email.ativo =False
