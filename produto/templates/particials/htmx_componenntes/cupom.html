@@ -1,0 +1,12 @@
+{% if cupoms %}
+{% for cup in cupoms %}
+<p id="msg" style="color: green;">{{cup.desconto}}% aplicado com sucesso
+  De: <s>R${{total}}0</s> Por R$ {{total_com_desconto}}0
+</p>
+{% endfor %}
+{% else %}
+<p id="msg" style="color: red;">Cupom inválido
+ 
+</p>
+{% endif%}
+

@@ -21,4 +21,4 @@ htmx_patterns =[
     path('search/',htmx_views.search, name='search')
 ]
 
-#urlpatterns += htmx_patterns
+urlpatterns += htmx_patterns

@@ -6,11 +6,21 @@ from .models import Pedido, ItemPedido, CupomDesconto
 from produto.models import Produto, Categoria
 from django.contrib.messages import constants
 from django.contrib import messages
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
+from django.db.models import Count
 
+def get_categorias_com_contagem():
+    cached_categorias = cache.get('all_categorias_com_contagem')
+    if cached_categorias is None:
+        categorias = Categoria.objects.annotate(quantidade=Count('produto')).values('id', 'categoria', 'quantidade')
+        cached_categorias = [{'id': cat['id'], 'categoria': cat['categoria'], 'quantidade': cat['quantidade']} for cat in categorias]
+        cache.set('all_categorias_com_contagem', cached_categorias, timeout=1800)
+    return cached_categorias
 
 def finalizar_pedido(request):
     if request.method == "GET":
-        categorias = Categoria.objects.all()
+        categorias = get_categorias_com_contagem()
 
         total = sum([float(i['preco']) for i in request.session['carrinho']])
         return render(request, 'finalizar_pedido.html', {'carrinho': len(request.session['carrinho']),
@@ -76,8 +86,9 @@ def finalizar_pedido(request):
             return redirect('/pedidofinalizar_pedido/')
 
 def validaCupom(request):
-    cupom = request.POST.get('cupom')
-    cupom = CupomDesconto.objects.filter(codigo = cupom)
+    data = json.loads(request.body)
+    codigo = data.get('cupom')
+    cupom = CupomDesconto.objects.filter(codigo = codigo)
     if len(cupom) > 0 and cupom[0].ativo:
         desconto = cupom[0].desconto
         total = sum([float(i['preco']) for i in request.session['carrinho']])
@@ -87,6 +98,8 @@ def validaCupom(request):
                                 'total_com_desconto': str(total_com_desconto).replace('.', ',')
 
                                 })
+     
         return HttpResponse(data_json)
     else:
+
         return HttpResponse(json.dumps({'status': 1}))
