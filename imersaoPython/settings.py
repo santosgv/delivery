@@ -30,6 +30,7 @@ INTERNAL_IPS = [
 
 INSTALLED_APPS = [
     'clearcache',
+    "daphne",
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -74,8 +75,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'imersaoPython.wsgi.application'
+#WSGI_APPLICATION = 'imersaoPython.wsgi.application'
 
+ASGI_APPLICATION = 'imersaoPython.asgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
@@ -158,7 +160,11 @@ EMAIL_USE_TLS=True
 EMAIL_PORT =587
 EMAIL_HOST='smtp.office365.com'
 
-
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 #CACHES = {
 #    'default': {
