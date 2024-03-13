@@ -62,7 +62,7 @@
       {% endcache %}
       <br>
       
-
+      {% if promos %}
       <div id="carouselExampleCaptions" class="carousel slide container-fluid" data-ride="carousel">
         <ol class="carousel-indicators">
           {% for promo in promos %}
@@ -89,6 +89,7 @@
           <span class="sr-only">Next</span>
         </a>
       </div>
+      {% endif %}
       
       {% block 'conteudo' %}
 

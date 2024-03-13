@@ -12,6 +12,7 @@ def notification_created(sender, instance, created, **kwargs):
             'public_room',
             {
                 "type": "send_notification",
-                "message": instance.id
+                "message": 'pedido N° ' + str(instance.id)
             }
         )
+        
