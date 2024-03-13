@@ -5,7 +5,7 @@
 {% block 'conteudo'%}
 <br>
 <br>
-<div class="container">
+<div class="container-fluid text-center" style="overflow-x:auto;" >
 <table class="table table-striped">
     <thead>
       <tr>
@@ -30,7 +30,6 @@
       {% endfor %}
     </tbody>
   </table>
-  <h3>Frete: R${{frete}}0</h3>
   <h1 class="titulo">Total: </h1>
   <h2 style="color: gray;">&nbsp R${{total}}0</h2>
   <a href="{% url 'finalizar_pedido' %}" class="btn btn-success">Finalizar compra</a>
