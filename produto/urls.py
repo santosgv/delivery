@@ -15,11 +15,13 @@ urlpatterns = [
     path("loja/", views.loja, name="loja"),
     path("contact/", views.contact, name='contact'),
     path("formulario/", views.formulario, name='formulario'),
+    path('unsubscriber/<int:id>',views.unsubscriber, name='unsubscriber'),
     path("categoria/<str:nome>", views.categorias, name='categoria'),
     path("produto/<int:id>", views.produto, name='produto'),
     path("add_carrinho", views.add_carrinho, name='add_carrinho'),
     path("ver_carrinho", views.ver_carrinho, name='ver_carrinho'),
     path("remover_carrinho/<int:id>", views.remover_carrinho, name='remover_carrinho'),
+    path('enviar_emeil/',views.enviar_emeil, name='enviar_emeil'),
     path('robots.txt',robots),
     path('sitemap.xml',sitemap, {'sitemaps': sitemaps}),
 ]

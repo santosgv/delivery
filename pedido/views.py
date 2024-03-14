@@ -10,7 +10,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.core.cache import cache
 from django.db.models import Count
-
+import datetime
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
@@ -86,6 +86,7 @@ def finalizar_pedido(request):
             request.session.save()
             return render(request, 'pedido_realizado.html')
         else:
+            logger.warning(f'Escolha ao menos um produto antes de efetuar a compra!'+str(datetime.datetime.now())+' horas!')
             messages.add_message(request, constants.ERROR, 'Escolha ao menos um produto antes de efetuar a compra!')
             return redirect('/pedidofinalizar_pedido/')
 
@@ -108,7 +109,7 @@ def validaCupom(request):
      
         return HttpResponse(data_json)
     else:
-
+        logger.critical(f'erro ao validar o cupom'+str(datetime.datetime.now())+' horas!')
         return HttpResponse(json.dumps({'status': 1}))
 
 
@@ -118,9 +119,12 @@ def freteBairro(request):
     data = json.loads(request.body)
     id_bairro = data.get('bairro')
     bairro = Bairro.objects.get(id=id_bairro)
-    data_json =json.dumps({'status': 0,
-                                    'frete': bairro.Frete,
-                                    })
-    return HttpResponse(data_json)
-
+    if len(bairro) > 0:
+        data_json =json.dumps({'status': 0,
+                                        'frete': bairro.Frete,
+                                        })
+        return HttpResponse(data_json)
+    else:
+        logger.critical(f'erro ao validar o bairro'+str(datetime.datetime.now())+' horas!')
+        return HttpResponse(json.dumps({'status': 1}))
 

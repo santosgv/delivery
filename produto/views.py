@@ -13,8 +13,16 @@ from django.db.models import Count
 import logging
 from django.conf import settings
 from django.contrib import sitemaps
+from .utils import email_html
+from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger('MyApp')
+logger.setLevel(logging.DEBUG) 
+file_handler = logging.FileHandler('INFO.log')
+file_handler.setLevel(logging.DEBUG) 
+formatter = logging.Formatter('%(message)s - %(levelname)s - %(asctime)s')
+file_handler.setFormatter(formatter)
+logger.addHandler(file_handler)
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
@@ -212,6 +220,8 @@ def contact(request):
 def formulario(request):
     if request.method =="POST":
         email = request.POST.get('email')
+        if len(email) < 0:
+            logger.warning(f'insira um email valido'+str(datetime.datetime.now())+' horas!')
         valida = Email.objects.filter(email=email)
         if valida.exists():
             messages.add_message(request, constants.ERROR, 'Email Ja cadastrado')
@@ -231,6 +241,25 @@ def unsubscriber(request,id):
     email.save()
     logger.info(f'Cancelado sua Inscriçao {email} '+str(datetime.datetime.now())+' horas!')
     return HttpResponse('Cancelado sua Inscriçao')
+
+
+@login_required(login_url='/admin/login/?next=/admin/') 
+def enviar_emeil(request):
+    try:
+        path_template = os.path.join(settings.BASE_DIR, 'produto/templates/emails/email.html')
+        base_url = request.build_absolute_uri('/')
+        emails = Email.objects.filter(ativo=True).all()
+        produtos = Produto.objects.only('id','nome_produto','descricao','img').filter(promocao=True,ativo=True).all().order_by('-id')[:15]
+
+        for email in emails:
+            email_html(path_template, 'Novos Produtos em Promoçao', [email,],produtos=produtos,email=email,base_url=base_url)
+            messages.add_message(request, constants.SUCCESS, 'Emails enviados com sucesso')
+            return redirect("/")
+        
+    except Exception as msg:
+        messages.add_message(request, constants.ERROR, f'Nao foi possivel enviar os Emails consulte o arquivo de Log')
+        logger.critical(f'{msg} '+str(datetime.datetime.now())+' horas!')
+        return redirect("/")
 
 
 @cache_page(60 * 100)
