@@ -121,9 +121,8 @@ def validaCupom(request):
 def freteBairro(request):
     data = json.loads(request.body)
     id_bairro = data.get('bairro')
-    bairro = Bairro.objects.get(id=id_bairro)
-    print(id_bairro)
-    if len(id_bairro) > 0:
+    if id_bairro !='0':
+        bairro = Bairro.objects.get(id=id_bairro)
         data_json =json.dumps({'status': 0,
                                         'frete': bairro.Frete,
                                         })
