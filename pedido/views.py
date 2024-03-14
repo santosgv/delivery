@@ -11,6 +11,9 @@ from django.db import transaction
 from django.core.cache import cache
 from django.db.models import Count
 import datetime
+import logging
+
+logger = logging.getLogger('Aplicacao')
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
@@ -119,7 +122,8 @@ def freteBairro(request):
     data = json.loads(request.body)
     id_bairro = data.get('bairro')
     bairro = Bairro.objects.get(id=id_bairro)
-    if len(bairro) > 0:
+    print(id_bairro)
+    if len(id_bairro) > 0:
         data_json =json.dumps({'status': 0,
                                         'frete': bairro.Frete,
                                         })

@@ -16,13 +16,8 @@ from django.contrib import sitemaps
 from .utils import email_html
 from django.contrib.auth.decorators import login_required
 
-logger = logging.getLogger('MyApp')
-logger.setLevel(logging.DEBUG) 
-file_handler = logging.FileHandler('INFO.log')
-file_handler.setLevel(logging.DEBUG) 
-formatter = logging.Formatter('%(message)s - %(levelname)s - %(asctime)s')
-file_handler.setFormatter(formatter)
-logger.addHandler(file_handler)
+logger = logging.getLogger('Aplicacao')
+
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
