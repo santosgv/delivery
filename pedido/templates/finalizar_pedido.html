@@ -85,7 +85,7 @@ Checkout
 
         <div class="col-sm fundo">
 
-        <form method="POST" action="{% url 'finalizar_pedido' %}">{% csrf_token %}
+        <form method="POST" action="{% url 'Pedido:finalizar_pedido' %}">{% csrf_token %}
 
           <br>
           <h3 class="rosa">Nome<span class="importante">*</span>:</h3>
@@ -206,7 +206,7 @@ Checkout
 <script>
     function validaCupom() {
         const cupom = document.getElementById('inputCupom').value;
-        fetch("{% url 'validaCupom'%}", {
+        fetch("{% url 'Pedido:validaCupom'%}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -236,7 +236,7 @@ Checkout
 <script>
     function freteBairro(){
         bairro = document.getElementById('inputbairro').value
-        fetch("{% url 'freteBairro'%}", {
+        fetch("{% url 'Pedido:freteBairro'%}", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

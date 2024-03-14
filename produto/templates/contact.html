@@ -27,7 +27,7 @@ Contatos
                     <div class="col-md-10 col-lg-8 col-xl-7">
                        <p style="color:var(--vermelho)"> Quer entrar em contato? Preencha o formulário abaixo para me enviar uma mensagem e entrarei em contato com você o mais breve possível!</p>
                         <div class="my-5">
-                            <form method="POST"  id="contactForm" action="{% url 'contact'%}">{% csrf_token %}
+                            <form method="POST"  id="contactForm" action="{% url 'Core:contact'%}">{% csrf_token %}
                                 <div class="form-floating">
                                     <label for="name" style="color:var(--vermelho)">Nome</label>
                                     <input class="form-control" id="name" name="name" type="text" placeholder="Entre com seu Nome" required  />

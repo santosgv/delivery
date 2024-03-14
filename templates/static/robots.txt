@@ -1,0 +1,25 @@
+User-agent: *
+Disallow: /admin
+Disallow: /README.txt
+User-agent: *
+User-agent: AdsBot-Google
+Allow: /$
+Allow: /
+Allow: /categoria/*
+Allow: /produto/*
+Allow: /loja
+Allow: /finalizar_pedido/
+Allow: /contact/
+Allow: /ver_carrinho/
+Sitemap: https://mundocoloridokids.com.br/sitemap.xml
+# CSS, JS, Images
+
+Allow: /static/js/*.js
+Allow: /static/img/*.*
+Allow: /static/css/*.css
+Allow: /static/assets/favicon.ico
+
+# Paths (no clean URLs)
+Allow: /media/post_img/*.png
+Allow: /media/post_img/*.jpg
+Allow: /media/post_img/*.webp

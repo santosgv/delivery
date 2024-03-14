@@ -17,7 +17,7 @@
         {%endif%}
 
     </div>
-    <img class="tamanhoImg" style="margin-top: 20px;" src="/media/{{produto.img}}">
+    <img class="tamanhoImg" style="margin-top: 20px;" src="{{produto.img.url}}">
 
     <h3  class="titulo tituloProduto">{{produto.nome_produto}}</h3>
   
@@ -28,7 +28,7 @@
 
     <h1 class="titulo subTituloProduto">Adicionais: </h1>
 
-    <form method="POST" action="{% url 'add_carrinho' %}">{% csrf_token %}
+    <form method="POST" action="{% url 'Core:add_carrinho' %}">{% csrf_token %}
     <input name="id" style="display: none;" type="text" value="{{produto.id}}">
 
     {% for i in produto.adicionais.all %}

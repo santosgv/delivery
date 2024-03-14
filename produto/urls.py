@@ -1,9 +1,14 @@
 from django.urls import path
 from . import views,htmx_views
 from django.urls import path
-from django.conf import settings
-from django.conf.urls.static import static
+from django.contrib.sitemaps.views import sitemap
+from produto.views import robots,Sitemap
 
+app_name = 'Core'
+
+sitemaps = {
+    'sitemap': Sitemap,
+}
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -15,6 +20,8 @@ urlpatterns = [
     path("add_carrinho", views.add_carrinho, name='add_carrinho'),
     path("ver_carrinho", views.ver_carrinho, name='ver_carrinho'),
     path("remover_carrinho/<int:id>", views.remover_carrinho, name='remover_carrinho'),
+    path('robots.txt',robots),
+    path('sitemap.xml',sitemap, {'sitemaps': sitemaps}),
 ]
 
 htmx_patterns =[

@@ -1,5 +1,6 @@
 
 import json
+from django.views.decorators.cache import cache_page
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Pedido, ItemPedido, CupomDesconto
@@ -9,6 +10,7 @@ from django.contrib import messages
 from django.db import transaction
 from django.core.cache import cache
 from django.db.models import Count
+
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
@@ -87,6 +89,8 @@ def finalizar_pedido(request):
             messages.add_message(request, constants.ERROR, 'Escolha ao menos um produto antes de efetuar a compra!')
             return redirect('/pedidofinalizar_pedido/')
 
+
+@cache_page(60 * 100)
 @transaction.atomic
 def validaCupom(request):
     data = json.loads(request.body)
@@ -107,6 +111,8 @@ def validaCupom(request):
 
         return HttpResponse(json.dumps({'status': 1}))
 
+
+@cache_page(60 * 100)
 @transaction.atomic
 def freteBairro(request):
     data = json.loads(request.body)
@@ -116,3 +122,5 @@ def freteBairro(request):
                                     'frete': bairro.Frete,
                                     })
     return HttpResponse(data_json)
+
+

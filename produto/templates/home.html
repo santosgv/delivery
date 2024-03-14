@@ -19,7 +19,7 @@
           <li class="list-group-item">R$ {{produto.preco}}0</li>
         </ul>
         <div class="card-body text-center">
-          <a style="margin-top: 20px;" href="{% url 'produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
+          <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
         </div>
       </div>
       {% endif %}

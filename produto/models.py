@@ -1,5 +1,5 @@
 from django.db import models
-from datetime import datetime
+from django.urls import reverse
 from django.utils.safestring import mark_safe
 
 class Categoria(models.Model):
@@ -41,10 +41,14 @@ class Produto(models.Model):
     adicionais = models.ManyToManyField(Adicional, blank=True)
     promocao=models.BooleanField(default=False)
     ativo = models.BooleanField(default=True)
+    data_upload = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse('Core:produto', args=[str(self.id)]) 
 
     @mark_safe
     def icone(self):
-        return f'<img width="30px" src="/media/{self.img}">'
+        return f'<img width="30px" src="{self.img.url}">'
 
 
     def __str__(self):

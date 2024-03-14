@@ -24,7 +24,7 @@
   <body>
     {% cache 3600 cache_base-2 %}
     <nav class="navbar navbar-expand-lg navbar-light corBorda">
-        <a class="navbar-brand" href="{% url 'home'%}"><img src="/static/img/logo.png" height="30px" alt="flixdopreco">
+        <a class="navbar-brand" href="{% url 'Core:home'%}"><img src="/static/img/logo.png" height="30px" alt="flixdopreco">
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
@@ -38,17 +38,17 @@
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                  {% for categoria in categorias %}
-                <a class="dropdown-item" href="{% url 'categoria' categoria.categoria %}">{{categoria.categoria}} <span class="badge badge-danger">{{categoria.quantidade}}</span></a>
+                <a class="dropdown-item" href="{% url 'Core:categoria' categoria.categoria %}">{{categoria.categoria}} <span class="badge badge-danger">{{categoria.quantidade}}</span></a>
                 {%endfor%}
               </div>
             </li>
               <li>
-                  <a class="nav-link " href="{% url 'loja'%}"  role="button">
+                  <a class="nav-link " href="{% url 'Core:loja'%}"  role="button">
                 Sobre nos
               </a>
               </li>
               <li>
-                  <a class="nav-link " href="{% url 'contact'%}"  role="button">
+                  <a class="nav-link " href="{% url 'Core:contact'%}"  role="button">
                       Contatos
                   </a>
               </li>
@@ -97,7 +97,7 @@
       {% endblock %}
 
       
-      {% if carrinho %}     <a class="nav-item my-cart-icon" href="{%url 'ver_carrinho'%}"><img width="25" height="25" src="https://img.icons8.com/glyph-neue/64/shopping-cart.png" alt="shopping-cart"/><span class="badge badge-pill badge-danger">{{carrinho}}</span>
+      {% if carrinho %}     <a class="nav-item my-cart-icon" href="{%url 'Core:ver_carrinho'%}"><img width="25" height="25" src="https://img.icons8.com/glyph-neue/64/shopping-cart.png" alt="shopping-cart"/><span class="badge badge-pill badge-danger">{{carrinho}}</span>
     </a>
     {% endif%}
         <div class="container">
@@ -150,7 +150,7 @@
 
     <!-- Section: Form -->
     <section class="">
-      <form method="POST"  action="{% url 'formulario' %}">{% csrf_token %} 
+      <form method="POST"  action="{% url 'Core:formulario' %}">{% csrf_token %} 
         <!--Grid row-->
         <div class="row d-flex justify-content-center">
           <!--Grid column-->

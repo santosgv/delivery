@@ -1,14 +1,18 @@
 from django.contrib.messages import constants
 from django.http import HttpResponse
+import os
 from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email
 from django.contrib import messages
 from django.db import transaction
+from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 import datetime
 from django.db.models import Count
 import logging
+from django.conf import settings
+from django.contrib import sitemaps
 
 logger = logging.getLogger('MyApp')
 
@@ -36,6 +40,7 @@ def home(request):
                                         'promos':promos
                                         })
 
+@cache_page(60 * 100)
 def loja(request):
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
@@ -112,6 +117,7 @@ def add_carrinho(request):
             aprovado = False
 
     if not aprovado:
+        logger.warning(f'Confira a quantidade de adicionais selecionados'+str(datetime.datetime.now())+' horas!')
         messages.add_message(request, constants.ERROR, 'Confira a quantidade de adicionais selecionados')
         return redirect(f'/produto/{id}')
 
@@ -171,6 +177,8 @@ def remover_carrinho(request, id):
     request.session.save()
     return redirect('/ver_carrinho')
 
+
+@cache_page(60 * 100)
 @transaction.atomic
 def contact(request):
     categorias = get_categorias_com_contagem()
@@ -221,4 +229,29 @@ def unsubscriber(request,id):
     email = Email.objects.get(id=id)
     email.ativo =False
     email.save()
+    logger.info(f'Cancelado sua Inscriçao {email} '+str(datetime.datetime.now())+' horas!')
     return HttpResponse('Cancelado sua Inscriçao')
+
+
+@cache_page(60 * 100)
+def robots(request):
+    if not settings.DEBUG:
+        path = os.path.join(settings.STATIC_ROOT,'robots.txt')
+        with open(path,'r') as arq:
+            return HttpResponse(arq, content_type='text/plain')
+    else:
+        path = os.path.join(settings.BASE_DIR,'templates/static/robots.txt')
+        with open(path,'r') as arq:
+            return HttpResponse(arq, content_type='text/plain')
+
+
+class Sitemap(sitemaps.Sitemap):
+    i18n = True
+    changefreq ='monthly'
+    priority = 0.7
+
+    def items(self):
+        return Produto.objects.filter(ativo=True).all()    
+
+    def lastmod(self, obj):
+        return obj.data_upload
