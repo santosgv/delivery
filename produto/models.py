@@ -21,6 +21,9 @@ class Opcoes(models.Model):
     ativo = models.BooleanField(default=True)
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name_plural = "Opçôes"
 
 class Adicional(models.Model):
     nome = models.CharField(max_length=100, unique=True)
@@ -30,6 +33,9 @@ class Adicional(models.Model):
     ativo = models.BooleanField(default=True)
     def __str__(self):
         return self.nome
+    
+    class Meta:
+        verbose_name_plural = "Adicionais"
 
 class Produto(models.Model):
     nome_produto = models.CharField(max_length=100)

@@ -14,6 +14,7 @@ import logging
 from django.conf import settings
 from django.contrib import sitemaps
 from .utils import email_html
+import re
 from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger('Aplicacao')
@@ -215,17 +216,19 @@ def contact(request):
 def formulario(request):
     if request.method =="POST":
         email = request.POST.get('email')
-        if len(email) < 0:
+       
+        if len(email) == 0:
             logger.warning(f'insira um email valido'+str(datetime.datetime.now())+' horas!')
+            messages.add_message(request, constants.WARNING, 'insira um email valido')
+            return redirect("/")
         valida = Email.objects.filter(email=email)
         if valida.exists():
             messages.add_message(request, constants.ERROR, 'Email Ja cadastrado')
             logger.info(f'Email Ja cadastrado {email} '+str(datetime.datetime.now())+' horas!')
             return redirect("/")
-        cadastrar = Email.objects.create(
+        Email.objects.create(
             email=email
         )
-        cadastrar.save()
         messages.add_message(request, constants.SUCCESS, 'Cadastrado com sucesso')
         return redirect("/")
     

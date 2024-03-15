@@ -185,27 +185,15 @@ LOGGING = {
     },
     'handlers': {
         'file': {
-            'level': 'WARNING',
+            'level': 'DEBUG',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'warning.log',
-            'formatter': 'simpleRe',
-        },
-        'file1': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'INFO.log',
-            'formatter': 'simpleRe',
-        },
-        'file2': {
-            'level': 'CRITICAL',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'Critical.log',
+            'filename': BASE_DIR / 'Log.log',
             'formatter': 'simpleRe',
         },
     },
     'loggers': {
         'Aplicacao': {
-            'handlers': ['file', 'file1', 'file2'],
+            'handlers': ['file'],
             'level': 'DEBUG',
             'propagate': True,
         },

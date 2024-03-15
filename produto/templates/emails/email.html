@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NewsLetter Kids</title>
+    <title>Catalogo de Promoçoes</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <style>
         .product {
@@ -24,31 +24,38 @@
                 <table border="0" cellspacing="0" cellpadding="0" style="max-width: 700px; width: 100%;">
                     <tr>
                         <td style="padding: 40px 20px; text-align: center;">
-                            <img src="https://mundocoloridokids.com.br/static/img/email.jpg" alt="Logo" width="50%">
+                            <img src="{{base_url}}/static/img/logo-min.png" alt="Logo" width="50%">
                         </td>
                     </tr>
                     <tr>
                         <td style="padding: 40px 20px; background-color: #ffffff;">
-                            <h1>Confira nossos Produtos</h1>
-                            <p>Olá,{{email}} Veja algumas das novidades de Hoje!</p>
+                            <h1 class="text-align">Veja nossos Produtos em Promoção</h1>
+                            <p>Olá,{{email}} Veja algumas das novidades dessa semana!</p>
                             {% for post in produtos %}
-                            <div class="product">
-                                <img src="https://img.freepik.com/fotos-gratis/mini-cupcake-da-arvore-de-natal-no-escuro-com-vista-frontal_140725-105754.jpg?t=st=1710388718~exp=1710392318~hmac=98cbeb2d3f9565f0d1069909de635b4daa26bd05edb1734ee102c4e0c1770cf0&w=740" alt="{{ post.nome_produto }}">
-                                <div>
-                                    <h2>{{ post.nome_produto }}</h2>
-                                    <p>{{ post.descricao }}</p>
-                                    <a href="{{base_url}}produto/{{post.id}}">Visualizar</a>
+         
+                            <div class="card mb-3 text-center product" style="max-width: 540px;">
+                                <div class="row no-gutters">
+                                  <div class="col-md-4">
+                                    <img src="{{post.img.url}}" alt="{{ post.nome_produto }}">
+                                  </div>
+                                  <div class="col-md-8">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{ post.nome_produto }}</h5>
+                                      <p class="card-text">{{ post.descricao }}</p>
+                                      <a href="{{base_url}}produto/{{post.id}}" class="btn btn-primary">Visualizar</a>
+                                    </div>
+                                  </div>
                                 </div>
-                            </div>
-                            <hr>
-                            <br>
+                              </div>
+                              <hr>
+
                             {% endfor %}
                             <p>Acesse Nossa Site para Ver mais <a href="{{base_url}}">Mundo Colorido Kids</a></p>
                         </td>
                     </tr>
                    <tr>
                     <td class="text-center">
-                        Esse email foi enviado para {{email}}
+                        Esse email foi enviado para automaticamente {{email}}
                         <p>Se você não quer mais receber este email clique <a href="{{base_url}}unsubscriber/{{email.id}}" target="_blank" rel="noopener noreferrer">Cancelar</a></p>
                     </td>
                    </tr>
