@@ -1,8 +1,9 @@
 {%extends 'base.html'%}
-{% load cache %}
+
+{% block 'title' %}Lanches Gulão{% endblock %}
 {% block 'conteudo'%}
 
-{% cache 3600 cache_produto-1 %}
+
 <div class="container-fluid">
     <div class="row justify-content-center">
 
@@ -19,7 +20,7 @@
           <li class="list-group-item">R$ {{produto.preco}}0</li>
         </ul>
         <div class="card-body text-center">
-          <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="botao">Adicionar ao carrinho</a>
+          <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="botao">Visualizar</a>
         </div>
       </div>
       {% endif %}
@@ -40,6 +41,6 @@
       </ul>
     </nav>
   </div>
-  {% endcache %}
+
   
 {%endblock%}

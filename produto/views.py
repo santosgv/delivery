@@ -14,7 +14,6 @@ import logging
 from django.conf import settings
 from django.contrib import sitemaps
 from .utils import email_html
-import re
 from django.contrib.auth.decorators import login_required
 
 logger = logging.getLogger('Aplicacao')
@@ -44,7 +43,7 @@ def home(request):
                                         'promos':promos
                                         })
 
-@cache_page(60 * 100)
+
 def loja(request):
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
@@ -182,7 +181,7 @@ def remover_carrinho(request, id):
     return redirect('/ver_carrinho')
 
 
-@cache_page(60 * 100)
+
 @transaction.atomic
 def contact(request):
     categorias = get_categorias_com_contagem()
@@ -272,6 +271,7 @@ def robots(request):
             return HttpResponse(arq, content_type='text/plain')
 
 
+@cache_page(60 * 100)
 class Sitemap(sitemaps.Sitemap):
     i18n = True
     changefreq ='monthly'

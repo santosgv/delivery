@@ -1,6 +1,6 @@
 {%extends 'base.html'%}
 {% load cache %}
-
+{% block 'title' %}Loja{% endblock %}
 {% block 'conteudo' %}
 {% cache 3600 cache_sobre-1 %}
 <!DOCTYPE html>
