@@ -20,7 +20,8 @@
           <li class="list-group-item">R$ {{produto.preco}}0</li>
         </ul>
         <div class="card-body text-center">
-          <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="botao">Visualizar</a>
+        
+          <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="nav-link botao loja-fechada">Visualizar</a>
         </div>
       </div>
       {% endif %}
@@ -41,6 +42,4 @@
       </ul>
     </nav>
   </div>
-
-  
 {%endblock%}

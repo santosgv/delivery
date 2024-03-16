@@ -15,4 +15,3 @@ def notification_created(sender, instance, created, **kwargs):
                 "message": 'pedido N° ' + str(instance.id)
             }
         )
-        

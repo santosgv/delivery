@@ -1,0 +1,85 @@
+
+
+
+{% block head %}
+
+{% endblock %}
+
+{% block conteudo %}
+
+{% endblock %}
+
+{% block js_script %}
+<script>
+    function connectToWebSocket() {
+        const socket = new WebSocket('ws://localhost:8000/ws/store_status/');
+
+        // Evento de abertura da conexão WebSocket
+        socket.onopen = function() {
+            console.log('Conexão WebSocket aberta');
+        };
+
+        // Evento de mensagem recebida do WebSocket
+        socket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+            const status = data.status;
+            // Atualize o estado da loja na interface do usuário com base no status recebido
+            const statusLoja = document.getElementById('statusLoja');
+            if (status === 'open') {
+                statusLoja.innerHTML = '<h1 class="text-center" style="color: green;">LOJA ABERTA</h1>';
+                // Armazene o status da loja no localStorage
+                localStorage.setItem('statusLoja', 'open');
+            } else {
+                statusLoja.innerHTML = '<h1 class="text-center" style="color: red;">LOJA FECHADA</h1>';
+                // Armazene o status da loja no localStorage
+                localStorage.setItem('statusLoja', 'closed');
+            }
+            // Desabilitar links quando a loja estiver fechada
+            disableLinksWhenStoreClosed();
+        };
+
+        // Evento de erro da conexão WebSocket
+        socket.onerror = function(error) {
+            console.error('Erro na conexão WebSocket:', error);
+        };
+
+        // Evento de fechamento da conexão WebSocket
+        socket.onclose = function() {
+            console.log('Conexão WebSocket fechada');
+            // Tente reconectar após um certo tempo, se necessário
+            setTimeout(connectToWebSocket, 5000);
+        };
+    }
+
+    // Chame a função para conectar ao WebSocket e para desabilitar links quando a página for carregada
+    document.addEventListener('DOMContentLoaded', function() {
+        connectToWebSocket();
+
+        // Carregue o status da loja armazenado no localStorage
+        const storedStatus = localStorage.getItem('statusLoja');
+        if (storedStatus === 'open') {
+            // Se a loja estiver aberta, atualize o HTML correspondente
+            document.getElementById('statusLoja').innerHTML = '<h1 class="text-center" style="color: green;">LOJA ABERTA</h1>';
+        } else {
+            // Se a loja estiver fechada, atualize o HTML correspondente
+            document.getElementById('statusLoja').innerHTML = '<h1 class="text-center" style="color: red;">LOJA FECHADA</h1>';
+        }
+        // Desabilitar links quando a loja estiver fechada
+        disableLinksWhenStoreClosed();
+    });
+
+    function disableLinksWhenStoreClosed() {
+        const statusLoja = localStorage.getItem('statusLoja');
+        const links = document.querySelectorAll('.loja-fechada');
+        if (statusLoja === 'closed') {
+            links.forEach(link => {
+                link.classList.add('disabled');
+            });
+        } else {
+            links.forEach(link => {
+                link.classList.remove('disabled');
+            });
+        }
+    }
+</script>
+{% endblock %}

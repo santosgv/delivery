@@ -32,7 +32,10 @@
   </table>
   <h1 class="titulo">Total: </h1>
   <h2 style="color: gray;">&nbsp R${{total}}0</h2>
-  <a href="{% url 'Pedido:finalizar_pedido' %}" class="btn btn-success">Finalizar compra</a>
+
+
+  <a href="{% url 'Pedido:finalizar_pedido' %}" class="btn btn-success loja-fechada">Finalizar compra</a>
   <a href="{% url 'Core:home'%}" class="btn btn-primary">Continuar comprando</a>
+
 </div>
 {%endblock%}

@@ -9,11 +9,11 @@ def main():
     #    print(f'Categoria criada {categoria.categoria}')
 
 
-    for _ in range(30):
+    for _ in range(random.randint(1, 40)):
         produto = Produto.objects.create(
             nome_produto=fake.name(),
-            img="post_img/produto4.jpg",
-            categoria=Categoria.objects.get(id=5),
+            img="post_img/produto1.jpg",
+            categoria=Categoria.objects.get(id=3),
             preco=random.randint(1, 100),
             descricao=fake.sentence(nb_words=20),
             ingredientes=fake.sentence(nb_words=15),

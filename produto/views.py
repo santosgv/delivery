@@ -16,6 +16,9 @@ from django.contrib import sitemaps
 from .utils import email_html
 from django.contrib.auth.decorators import login_required
 
+from channels.layers import get_channel_layer
+from asgiref.sync import async_to_sync
+
 logger = logging.getLogger('Aplicacao')
 
 
@@ -26,6 +29,8 @@ def get_categorias_com_contagem():
         cached_categorias = [{'id': cat['id'], 'categoria': cat['categoria'], 'quantidade': cat['quantidade']} for cat in categorias]
         cache.set('all_categorias_com_contagem', cached_categorias, timeout=1800)
     return cached_categorias
+
+
 
 def home(request):
     categorias = get_categorias_com_contagem()
@@ -180,8 +185,29 @@ def remover_carrinho(request, id):
     request.session.save()
     return redirect('/ver_carrinho')
 
+def fechar_loja(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'public_room',
+        {
+            'type': 'update_store_status',
+            'status': 'closed'
+        }
+    )
+    messages.add_message(request, constants.SUCCESS, 'Loja fechada com sucesso')
+    return redirect('/')
 
-
+def abrir_loja(request):
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'public_room',
+        {
+            'type': 'update_store_status',
+            'status': 'open'
+        }
+    )
+    messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
+    return redirect('/')
 @transaction.atomic
 def contact(request):
     categorias = get_categorias_com_contagem()
