@@ -1,7 +1,7 @@
 
 @font-face {
     font-family:'minhafonte';
-    src:url("../produto/font/angrybirds-regular.ttf");
+    src:url("../css/font/Insanibu.ttf");
 }
     
 
@@ -39,6 +39,7 @@
 
 .carde {
     margin: 8px;
+    padding-top: 15px;
   }
   
 .corBorda{
@@ -88,6 +89,7 @@ padding-bottom: 20px;
 body{
     /* fundo */
     background-color:var(--branco);
+    font-family: minhafonte;
 }
 
 .titulo{

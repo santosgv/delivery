@@ -34,7 +34,7 @@ def home(request):
         request.session.save()
     produtos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True).all().order_by('-id')
     promos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,promocao=True).all().order_by('-id')
-    pagina = Paginator(produtos,25)
+    pagina = Paginator(produtos,15)
     pg_number = request.GET.get('page')
     paginas = pagina.get_page(pg_number)
     return render(request, 'home.html', {'produtos': paginas,
@@ -61,7 +61,7 @@ def categorias(request, nome):
         request.session.save()
     categoria_nome = get_object_or_404(Categoria, categoria=nome)
     produtos =Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,categoria=categoria_nome).all().order_by('-id')
-    pagina = Paginator(produtos,25)
+    pagina = Paginator(produtos,15)
     pg_number = request.GET.get('page')
     paginas = pagina.get_page(pg_number)
 
