@@ -12,12 +12,12 @@ def main():
     for _ in range(30):
         produto = Produto.objects.create(
             nome_produto=fake.name(),
-            img="post_img/produto2.jpg",
-            categoria=Categoria.objects.get(id=4),
+            img="post_img/produto4.jpg",
+            categoria=Categoria.objects.get(id=5),
             preco=random.randint(1, 100),
             descricao=fake.sentence(nb_words=20),
             ingredientes=fake.sentence(nb_words=15),
-            promocao=True
+           # promocao=True
         )
         print(f'Produto criada {produto.nome_produto}')
 
