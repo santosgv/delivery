@@ -1,5 +1,5 @@
 {%extends 'base.html'%}
-
+{% load static %}
 {% block 'title' %}Lanches Gulão{% endblock %}
 {% block 'conteudo'%}
 
@@ -16,8 +16,9 @@
           <h5 class="card-title text-center">{{produto.nome_produto}}</h5>
         </div>
         <ul class="list-group list-group-flush text-center">
-          <li class="list-group-item" style="color: gray;">Descrição: {{produto.descricao}}</li>
-          <li class="list-group-item">R$ {{produto.preco}}0</li>
+          <li class="list-group-item" style="color: gray;">Descrição: {{produto.descricao|slice:":30"}}...</li>
+          <li class="list-group-item">{% if produto.promocao%}<img src="{% static 'img/icons8-desconto.gif' %} " height="30px" alt="icon-promo">{% endif %}
+            R$ {{produto.preco}}0</li>
         </ul>
         <div class="card-body text-center">
         

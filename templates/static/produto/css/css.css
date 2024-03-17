@@ -24,7 +24,9 @@
 
 .promo{
     font-size:40px;
-    color:var(--preta);
+    color:var(--branco);
+    -webkit-text-stroke-width: 3px;
+    -webkit-text-stroke-color: black;
 }
 
 

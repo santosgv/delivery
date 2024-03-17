@@ -78,7 +78,7 @@
         <div class="carousel-inner">
           {% for promo in promos %}
           <div class="carousel-item {% if forloop.first %} active {% endif %}">
-            <img src="{{ promo.img.url }}" class="d-block w-100" style="height:350px; width: 100%; background-size: cover;background-position: center;"  alt="...">
+            <img src="{{ promo.img.url }}" class="d-block w-100" style="height:350px; width: 100%; background-size: cover;background-position: center;"  alt="{{promo.img.url}}">
             <div class="carousel-caption d-none d-md-block">
               <h5 class="promo">{{ promo.nome_produto }}</h5>
               <p class="promo">{{ promo.descricao }}</p>
