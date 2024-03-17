@@ -30,7 +30,6 @@ def get_categorias_com_contagem():
         cache.set('all_categorias_com_contagem', cached_categorias, timeout=1800)
     return cached_categorias
 
-
 def get_all_produtos():
     cached_produtos = cache.get('all_produtos')
     if cached_produtos is None:
@@ -39,7 +38,6 @@ def get_all_produtos():
         cache.set('all_produtos', cached_produtos, timeout=1800)
     return cached_produtos
 
-
 def get_produtos_com_promocao():
     cached_promo = cache.get('all_produtos_com_promocao')
     if cached_promo is None:
@@ -47,7 +45,6 @@ def get_produtos_com_promocao():
         cached_promo = [{'nome_produto': produto.nome_produto, 'img': produto.img, 'descricao': produto.descricao} for produto in promos]
         cache.set('all_produtos_com_promocao', cached_promo, timeout=1800)
     return cached_promo
-
 
 def home(request):
     categorias = get_categorias_com_contagem()
@@ -64,7 +61,6 @@ def home(request):
                                         'categorias': categorias,
                                         'promos':promos
                                         })
-
 
 def loja(request):
     categorias = get_categorias_com_contagem()
@@ -176,7 +172,7 @@ def add_carrinho(request):
 
 
 def ver_carrinho(request):
-    categorias = Categoria.objects.all()
+    categorias = get_categorias_com_contagem()
     dados_motrar = []
     for i in request.session['carrinho']:
         prod = Produto.objects.filter(id=i['id_produto'])
@@ -223,6 +219,7 @@ def abrir_loja(request):
             'status': 'open'
         }
     )
+
     messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
     return redirect('/')
 

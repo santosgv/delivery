@@ -23,16 +23,15 @@ class NotificationConsumer(AsyncWebsocketConsumer):
 
 class StoreStatusConsumer(AsyncWebsocketConsumer):
     async def connect(self):
-        self.group_name = 'public_room'
         await self.channel_layer.group_add(
-            self.group_name,
+            'public_room',
             self.channel_name
         )
         await self.accept()
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
-            self.group_name,
+            'public_room',
             self.channel_name
         )
 
