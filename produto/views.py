@@ -31,14 +31,31 @@ def get_categorias_com_contagem():
     return cached_categorias
 
 
+def get_all_produtos():
+    cached_produtos = cache.get('all_produtos')
+    if cached_produtos is None:
+        produtos = Produto.objects.filter(ativo=True).only('id', 'nome_produto', 'img', 'descricao','promocao','preco').order_by('-id')
+        cached_produtos = [{'id': produto.id, 'nome_produto': produto.nome_produto, 'img': produto.img, 'descricao': produto.descricao,'promocao':produto.promocao, 'preco': produto.preco} for produto in produtos]
+        cache.set('all_produtos', cached_produtos, timeout=1800)
+    return cached_produtos
+
+
+def get_produtos_com_promocao():
+    cached_promo = cache.get('all_produtos_com_promocao')
+    if cached_promo is None:
+        promos = Produto.objects.only('nome_produto','img','descricao').filter(ativo=True,promocao=True).all().order_by('-id')
+        cached_promo = [{'nome_produto': produto.nome_produto, 'img': produto.img, 'descricao': produto.descricao} for produto in promos]
+        cache.set('all_produtos_com_promocao', cached_promo, timeout=1800)
+    return cached_promo
+
 
 def home(request):
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
-    produtos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True).all().order_by('-id')
-    promos = Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,promocao=True).all().order_by('-id')
+    produtos = get_all_produtos()
+    promos = get_produtos_com_promocao()
     pagina = Paginator(produtos,15)
     pg_number = request.GET.get('page')
     paginas = pagina.get_page(pg_number)
@@ -65,7 +82,7 @@ def categorias(request, nome):
         request.session['carrinho'] = []
         request.session.save()
     categoria_nome = get_object_or_404(Categoria, categoria=nome)
-    produtos =Produto.objects.only('nome_produto','img','descricao','preco','descricao','ingredientes','adicionais').filter(ativo=True,categoria=categoria_nome).all().order_by('-id')
+    produtos =Produto.objects.filter(ativo=True,categoria=categoria_nome).only('id', 'nome_produto', 'img', 'descricao','promocao','preco').order_by('-id')
     pagina = Paginator(produtos,15)
     pg_number = request.GET.get('page')
     paginas = pagina.get_page(pg_number)
@@ -208,6 +225,7 @@ def abrir_loja(request):
     )
     messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
     return redirect('/')
+
 @transaction.atomic
 def contact(request):
     categorias = get_categorias_com_contagem()

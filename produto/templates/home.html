@@ -8,8 +8,6 @@
     <div class="row justify-content-center">
 
     {% for produto in produtos %}
-
-        {% if produto.ativo %}
       <div class="card carde" style="width: 18rem;">
         <img src="{{produto.img.url}}" class="card-img-top" alt="{{produto.img.url}}">
         <div class="card-body">
@@ -25,7 +23,6 @@
           <a style="margin-top: 20px;" href="{% url 'Core:produto' produto.id%}" class="nav-link botao loja-fechada">Visualizar</a>
         </div>
       </div>
-      {% endif %}
       {% endfor %}
 
     </div>
