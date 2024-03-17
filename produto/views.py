@@ -189,7 +189,7 @@ def ver_carrinho(request):
 
     return render(request, 'carrinho.html', {'dados': dados_motrar,
                                              'total': total,
-                                             'carrinho': len(request.session['carrinho']),
+                                             #'carrinho': len(request.session['carrinho']),
                                              'categorias': categorias
                                              })
 
@@ -219,7 +219,6 @@ def abrir_loja(request):
             'status': 'open'
         }
     )
-
     messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
     return redirect('/')
 

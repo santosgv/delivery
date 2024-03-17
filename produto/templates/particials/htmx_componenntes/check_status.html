@@ -12,7 +12,10 @@
 {% block js_script %}
 <script>
     function connectToWebSocket() {
-        const socket = new WebSocket('ws://localhost:8000/ws/store_status/');
+        
+        const socket = new WebSocket(
+        `ws://${window.location.host}/ws/store_status/`
+    );
 
         // Evento de abertura da conexão WebSocket
         socket.onopen = function() {
