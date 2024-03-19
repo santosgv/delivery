@@ -1,8 +1,11 @@
 
-from django.http import HttpResponse
 from django.shortcuts import render
-from pedido.models import CupomDesconto
+from produto.models import Unidade
+from django.contrib import messages
+from django.contrib.messages import constants
 
 
 def search(request):
     return render(request,'particials/htmx_componenntes/aviso.html')
+
+

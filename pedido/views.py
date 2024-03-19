@@ -4,6 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Pedido, ItemPedido, CupomDesconto
+from produto.views import get_status
 from produto.models import Produto, Categoria,Bairro,Bairro
 from django.contrib.messages import constants
 from django.contrib import messages
@@ -25,6 +26,7 @@ def get_categorias_com_contagem():
 
 @transaction.atomic
 def finalizar_pedido(request):
+    status = get_status()
     if request.method == "GET":
         categorias = get_categorias_com_contagem()
         bairros = Bairro.objects.all()
@@ -32,7 +34,8 @@ def finalizar_pedido(request):
         return render(request, 'finalizar_pedido.html', {'carrinho': len(request.session['carrinho']),
                                                          'categorias': categorias,
                                                          'total': total,
-                                                         'bairros':bairros
+                                                         'bairros':bairros,
+                                                         'status':status,
                                                          })
     else:
         if len(request.session['carrinho']) > 0:

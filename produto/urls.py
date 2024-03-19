@@ -13,8 +13,6 @@ sitemaps = {
 urlpatterns = [
     path("", views.home, name="home"),
     path("loja/", views.loja, name="loja"),
-    path("fechar_loja",views.fechar_loja, name='fechar_loja'),
-    path("abrir_loja",views.abrir_loja, name="abrir_loja"),
     path("contact/", views.contact, name='contact'),
     path("formulario/", views.formulario, name='formulario'),
     path('unsubscriber/<int:id>',views.unsubscriber, name='unsubscriber'),
@@ -29,7 +27,8 @@ urlpatterns = [
 ]
 
 htmx_patterns =[
-    path('search/',htmx_views.search, name='search')
+    path('search/',htmx_views.search, name='search'),
+   # path('status/',htmx_views.status, name='status'),
 ]
 
 urlpatterns += htmx_patterns

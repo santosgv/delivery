@@ -3,7 +3,7 @@ from django.http import HttpResponse
 import os
 from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
-from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email
+from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email,Unidade
 from django.contrib import messages
 from django.db import transaction
 from django.views.decorators.cache import cache_page
@@ -16,11 +16,15 @@ from django.contrib import sitemaps
 from .utils import email_html
 from django.contrib.auth.decorators import login_required
 
-from channels.layers import get_channel_layer
-from asgiref.sync import async_to_sync
+#from channels.layers import get_channel_layer
+#from asgiref.sync import async_to_sync
 
 logger = logging.getLogger('Aplicacao')
 
+
+def get_status():
+    status = Unidade.objects.last()
+    return status
 
 def get_categorias_com_contagem():
     cached_categorias = cache.get('all_categorias_com_contagem')
@@ -47,6 +51,7 @@ def get_produtos_com_promocao():
     return cached_promo
 
 def home(request):
+    status = get_status()
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
@@ -59,10 +64,12 @@ def home(request):
     return render(request, 'home.html', {'produtos': paginas,
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,
-                                        'promos':promos
+                                        'promos':promos,
+                                        'status':status,
                                         })
 
 def loja(request):
+    status = get_status()
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
@@ -70,9 +77,11 @@ def loja(request):
     return render(request, 'loja.html', {
                                         'carrinho': len(request.session['carrinho']),
                                         'categorias': categorias,
+                                        'status':status,
                                         })
 
 def categorias(request, nome):
+    status = get_status()
     categorias = get_categorias_com_contagem()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
@@ -85,9 +94,12 @@ def categorias(request, nome):
 
     return render(request, 'home.html', {'produtos': paginas,
                                         'carrinho': len(request.session['carrinho']),
-                                        'categorias': categorias,})
+                                        'categorias': categorias,
+                                        'status':status,
+                                        })
 
 def produto(request, id):
+    status = get_status()
     if not request.session.get('carrinho'):
         request.session['carrinho'] = []
         request.session.save()
@@ -98,6 +110,7 @@ def produto(request, id):
     return render(request, 'produto.html', {'produto': produto,
                                             'carrinho': len(request.session['carrinho']),
                                             'categorias': categorias,
+                                            'status':status,
                                            })
 
 @transaction.atomic
@@ -172,6 +185,7 @@ def add_carrinho(request):
 
 
 def ver_carrinho(request):
+    status = get_status()
     categorias = get_categorias_com_contagem()
     dados_motrar = []
     for i in request.session['carrinho']:
@@ -190,7 +204,8 @@ def ver_carrinho(request):
     return render(request, 'carrinho.html', {'dados': dados_motrar,
                                              'total': total,
                                              #'carrinho': len(request.session['carrinho']),
-                                             'categorias': categorias
+                                             'categorias': categorias,
+                                             'status':status,
                                              })
 
 def remover_carrinho(request, id):
@@ -198,29 +213,30 @@ def remover_carrinho(request, id):
     request.session.save()
     return redirect('/ver_carrinho')
 
-def fechar_loja(request):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        'public_room',
-        {
-            'type': 'update_store_status',
-            'status': 'closed'
-        }
-    )
-    messages.add_message(request, constants.SUCCESS, 'Loja fechada com sucesso')
-    return redirect('/')
+#def fechar_loja(request):
+#    channel_layer = get_channel_layer()
+#    async_to_sync(channel_layer.group_send)(
+#        'public_room',
+#        {
+#            'type': 'update_store_status',
+#            'status': 'closed'
+#        }
+#    )
+#    messages.add_message(request, constants.SUCCESS, 'Loja fechada com sucesso')
+#    return redirect('/')
 
-def abrir_loja(request):
-    channel_layer = get_channel_layer()
-    async_to_sync(channel_layer.group_send)(
-        'public_room',
-        {
-            'type': 'update_store_status',
-            'status': 'open'
-        }
-    )
-    messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
-    return redirect('/')
+#def abrir_loja(request):
+#    channel_layer = get_channel_layer()
+#    async_to_sync(channel_layer.group_send)(
+#        'public_room',
+#        {
+#            'type': 'update_store_status',
+#            'status': 'open'
+#        }
+#    )
+#    messages.add_message(request, constants.SUCCESS, 'Loja Aberta com sucesso')
+#    return redirect('/')
+
 
 @transaction.atomic
 def contact(request):
@@ -230,10 +246,12 @@ def contact(request):
         request.session.save()
         
     if request.method == "GET":
+        status = get_status()
         categorias = get_categorias_com_contagem()
         status = request.GET.get('status')
-        return render(request,'contact.html',{'status':status,'categorias':categorias,
+        return render(request,'contact.html',{'categorias':categorias,
                                               'carrinho': len(request.session['carrinho']),
+                                              'status':status,
                                               })
     else:
         NOME = request.POST.get('name')

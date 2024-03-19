@@ -82,3 +82,14 @@ class Email(models.Model):
     
     class Meta:
         verbose_name_plural = "Newsletter"
+
+class Unidade(models.Model):
+    nome = models.CharField(max_length=100,null=True, blank=True)
+    horario_de = models.TimeField(auto_now=False, auto_now_add=False)
+    horario_ate = models.TimeField(auto_now=False, auto_now_add=False)
+    ativo = models.BooleanField(default=True)
+
+    def __str__(self) -> str:
+        return self.nome
+    class Meta:
+        verbose_name_plural = "Horarios"
