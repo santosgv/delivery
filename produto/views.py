@@ -1,25 +1,40 @@
 from django.contrib.messages import constants
-from django.http import HttpResponse
+from django.http import HttpResponse,JsonResponse
 import os
 from django.shortcuts import render,redirect,get_object_or_404
 from django.core.paginator import Paginator
 from .models import Produto, Categoria, Opcoes, Adicional,Contato,Email,Unidade
+from pedido.models import Pedido,ItemPedido
 from django.contrib import messages
 from django.db import transaction
 from django.views.decorators.cache import cache_page
 from django.core.cache import cache
 import datetime
-from django.db.models import Count
+from django.db.models import Count,Sum
+from django.db.models.functions import TruncMonth
 import logging
 from django.conf import settings
 from django.contrib import sitemaps
 from .utils import email_html
 from django.contrib.auth.decorators import login_required
+from calendar import monthrange
+from datetime import datetime, date
+from django.utils.timezone import now,timedelta
 
 #from channels.layers import get_channel_layer
 #from asgiref.sync import async_to_sync
 
 logger = logging.getLogger('Aplicacao')
+
+def primeiro_dia_mes():
+    data_atual = date.today()
+    primeiro_dia = data_atual.replace(day=1)
+    return primeiro_dia
+
+def ultimo_dia_mes():
+    data_atual = date.today()
+    last_date = data_atual.replace(day=1) + timedelta(monthrange(data_atual.year, data_atual.month)[1] - 1)
+    return last_date
 
 
 def get_status():
@@ -98,6 +113,7 @@ def categorias(request, nome):
                                         'status':status,
                                         })
 
+@transaction.atomic
 def produto(request, id):
     status = get_status()
     if not request.session.get('carrinho'):
@@ -297,6 +313,47 @@ def unsubscriber(request,id):
     logger.info(f'Cancelado sua Inscriçao {email} '+str(datetime.datetime.now())+' horas!')
     return HttpResponse('Cancelado sua Inscriçao')
 
+
+def total_vendas(request):
+
+    total_vendas = Pedido.objects.filter(entregue=True).aggregate(total=Sum('total'))['total']
+
+    return JsonResponse({'total_vendas': total_vendas})
+
+def ticket_medio(request):
+    total_vendas = Pedido.objects.filter(entregue=True).aggregate(total=Sum('total'))['total']
+    numero_pedidos = Pedido.objects.count()
+    ticket_medio =  total_vendas / numero_pedidos
+    ticket = f'{ticket_medio:,.2f}'
+    return JsonResponse({'ticket_medio':ticket})
+
+def mais_vendidos(request):    
+    itens_vendidos = ItemPedido.objects.filter(pedido__data__gte=primeiro_dia_mes(),pedido__data__lte=ultimo_dia_mes())
+    
+    # Agrupa os itens vendidos por produto e calcula o total de vendas de cada um
+    vendas_por_produto = {}
+    for item in itens_vendidos:
+        if item.produto not in vendas_por_produto:
+            vendas_por_produto[item.produto] = 0
+        vendas_por_produto[item.produto] += item.quantidade
+    
+    # Classifica os produtos por número de vendas e retorna o mais vendido do mês
+    mais_vendido = max(vendas_por_produto, key=vendas_por_produto.get)
+    return JsonResponse({'mais_vendido':mais_vendido.nome_produto})
+
+def vendas_ultimos_12_meses(request):
+    hoje = datetime.today()
+    data_limite = hoje - timedelta(days=365)
+    vendas = Pedido.objects.annotate(mes_venda=TruncMonth('data')).values('mes_venda').annotate(total_vendas=Count('id')).filter(data__gte=data_limite,data__lte=hoje).order_by('mes_venda')
+    data_vendas = [{'mes_venda': venda['mes_venda'].strftime('%B/%Y'), 'total_vendas': venda['total_vendas']} for venda in vendas]
+    return JsonResponse({'data': data_vendas})
+
+def bairro_mais_pedido(request):
+    bairro_mais_pedido = Pedido.objects.values('bairro__Nome').annotate(total_pedidos=Count('id')).order_by('-total_pedidos').first()
+    return JsonResponse({'bairro_mais_pedido':bairro_mais_pedido['bairro__Nome']})
+
+def dashbords(request):
+    return render(request,'dashbords.html')
 
 @login_required(login_url='/admin/login/?next=/admin/') 
 def enviar_emeil(request):

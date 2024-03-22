@@ -28,6 +28,8 @@ MANIFEST
 
 /media
 /post_img
+/tmp
+*.txt
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

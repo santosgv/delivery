@@ -221,7 +221,7 @@ Checkout
             const msg = document.getElementById('msg');
             if (resposta['status'] == 1) {
                 div_total.innerHTML = 'Total: R$ {{total}}0';
-                msg.innerHTML = "Cupom inválido";
+                msg.innerHTML = "Cupom inválido Ou Inativo";
                 msg.style.color = 'red';
             } else {
                 div_total.innerHTML = 'De: <s style="color: red;">R$ {{total}}0</s> Por R$' +  resposta['total_com_desconto'] + '0';
@@ -250,9 +250,8 @@ Checkout
             const frete_msg = document.getElementById('frete_msg');
             const msg_frete = document.getElementById('msg_frete');
             if (resposta['status'] == 1) {
-                msg_frete.innerHTML = "Bairro inválido";
-                msg_frete.style.color = 'red';
             } else {
+                frete_msg.innerHTML  ='';
                 frete_msg.innerHTML = 'Frete : R$' +  resposta['frete'];
                 msg_frete.style.color = 'green';
             }
