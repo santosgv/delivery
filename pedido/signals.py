@@ -3,7 +3,7 @@ from django.dispatch import receiver
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from pedido.models import Pedido
-import pywhatkit as kit
+#import pywhatkit as kit
 
 @receiver(post_save, sender=Pedido)
 def notification_created(sender, instance, created, **kwargs):

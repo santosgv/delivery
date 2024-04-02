@@ -1,0 +1,27 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Document</title>
+</head>
+<body>
+    <header class="w-full h-[420px] bg-zinc-900 bg-home bg-cover bg-center">
+        <div class="w-full h-full flex flex-col justify-center items-center">
+        <img src="/static/img/logo.webp" alt="logo" class="w-32 h-32 rounded-full shadow-lg houver:110 duration-200">
+        <h1 class="text-5x1 mt-4 mb-2 font-bold text-white">Lanches Gulao</h1>
+    </div>
+    </header>
+</body>
+<style>
+    body{
+        background-color: #f6f7f8;
+
+    }
+    header{
+        background-image: url({% static 'img/loja.jpg' %});
+    }
+</style>
+</html>

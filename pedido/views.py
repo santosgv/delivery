@@ -134,3 +134,5 @@ def freteBairro(request):
         logger.critical(f'erro ao validar o bairro'+str(datetime.datetime.now())+' horas!')
         return HttpResponse(json.dumps({'status': 1}))
 
+def novo(request):
+    return render(request,'novo_html')
