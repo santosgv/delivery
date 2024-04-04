@@ -25,94 +25,38 @@
     <div id=menu>
         <main class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
             <!-- Produto item -->
+            {% for produto in produtos %}
             <div class="flex gap-2">
-                <img src="{% static 'img/loja.jpg' %}" 
-                alt="hamburger"
+                <img src="{{produto.img.url}}" 
+                alt="{{produto.img.url}}"
                 class="w-28 h-28 rounded-md houver:scale-110 houver:-rotate-2 duration-300"
                 >
                 <div>
-                    <p class="font-bold">Hamburger 1</p>
-                    <p class="text-sm">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumque commodi tempora!</p>
+                    <p class="font-bold">{{produto.nome_produto}}</p>
+                    <p class="text-sm">{{produto.descricao|slice:":30"}}</p>
                     <div class="flex items-center gap-2 justify-between mt-3">
-                        <p class="font-bold text-lg">R$ 18.90</p>
+                        <p class="font-bold text-lg">R$ {{produto.preco}}0</p>
                         <button class="bg-gray-900 px-5 rounded add-to-cart-btn"
-                        data-name="Hamburger 1"
-                        data-proce="18.90"
+                        data-name="{{produto.nome_produto}}"
+                        data-proce="{{produto.preco}}0"
                         >
                             <i class="fa fa-cart-plus text-lg text-white"></i>
                         </button>
                     </div>
                 </div>
             </div>
+            {% endfor %}
             <!-- fim Produto item -->
-
-            <div class="flex gap-2">
-                <img src="{% static 'img/loja.jpg' %}" 
-                alt="hamburger"
-                class="w-28 h-28 rounded-md houver:scale-110 houver:-rotate-2 duration-300"
-                >
-                <div>
-                    <p class="font-bold">Hamburger 2</p>
-                    <p class="text-sm">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumque commodi tempora!</p>
-                    <div class="flex items-center gap-2 justify-between mt-3">
-                        <p class="font-bold text-lg">R$ 20.90</p>
-                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn"
-                        data-name="Hamburger 2"
-                        data-proce="20.90"
-                        >
-                            <i class="fa fa-cart-plus text-lg text-white"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <img src="{% static 'img/loja.jpg' %}" 
-                alt="hamburger"
-                class="w-28 h-28 rounded-md houver:scale-110 houver:-rotate-2 duration-300"
-                >
-                <div>
-                    <p class="font-bold">Hamburger 3</p>
-                    <p class="text-sm">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumque commodi tempora!</p>
-                    <div class="flex items-center gap-2 justify-between mt-3">
-                        <p class="font-bold text-lg">R$ 25.90</p>
-                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn"
-                        data-name="Hamburger 3"
-                        data-proce="25.90"
-                        >
-                            <i class="fa fa-cart-plus text-lg text-white"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex gap-2">
-                <img src="{% static 'img/loja.jpg' %}" 
-                alt="hamburger"
-                class="w-28 h-28 rounded-md houver:scale-110 houver:-rotate-2 duration-300"
-                >
-                <div>
-                    <p class="font-bold">Hamburger 4</p>
-                    <p class="text-sm">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Cumque commodi tempora!</p>
-                    <div class="flex items-center gap-2 justify-between mt-3">
-                        <p class="font-bold text-lg">R$ 40.90</p>
-                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn"
-                        data-name="Hamburger 4"
-                        data-proce="40.90"
-                        >
-                            <i class="fa fa-cart-plus text-lg text-white"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
 
         </main>
     
+        {% for categoria in categorias %}
     <div class="text-2x1 md:text-3x1 font-bold text-center mt-9 mb-6">
         <h2 class="font-bold text-3x1">
-            Bebidas
+            {{categoria.categoria}}
         </h2>
     </div>
+    {%endfor%}
  <!-- bebidas -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7 md:gap-10 mx-auto max-w-7xl px-2 mb-16">
         <div class="flex gap-2">
@@ -137,12 +81,34 @@
     </div>
     <!-- fim bebidas-->
 </div>
+
+<!-- modal -->
+<div class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify-center hidden">
+    <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
+        <h2 class="text-center font-bold text-2x1 mb-2">Meu Carrinho</h2>
+
+        <div id="card-items" class="flex justify-between mb-2 flex-col"></div>
+        <p class="font-bold">Total: <span id="cart-total">0.00</span></p>
+
+        <p class="font-bold">Endereço de entrega:</p>
+        <input type="text" name="" id="address" class="w-full border-2 p-1 rouded my-1">
+        <p class="text-red-500 hidden" id="address-warn">Digite seu endereco completo</p>
+
+        <div class="flex items-center justify-between mt-5 w-full">
+            <button id="close-modal-btn">Fechar</button>
+            <button id="checkout-btn" class="bg-green-500 text-white px-4 py-1 rounded">Finalizar pedido</button>
+
+        </div>
+    </div>
+</div>
+<!-- fim modal-->
+
 <!-- bootao card-->
-<footer class="w-full bg-red-500 py-3 fixed bottom-0 z-40 flex items-center justifly-center">
+<footer class="w-full bg-red-500 py-3 fixed bottom-0 z-40 flex items-center justify-center">
     <button 
     class="flex items-center gap-2 text-white font-bold"
     id="'cart-btn">
-        (<span id="cart-count">2</span>)
+        (<span id="cart-count">0</span>)
         Veja meu carrinho
         <i class="fa fa-cart-plus text-lg text-white"></i>
     </button>
