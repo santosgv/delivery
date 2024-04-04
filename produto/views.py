@@ -52,8 +52,8 @@ def get_categorias_com_contagem():
 def get_all_produtos():
     cached_produtos = cache.get('all_produtos')
     if cached_produtos is None:
-        produtos = Produto.objects.filter(ativo=True).only('id', 'nome_produto', 'img', 'descricao','promocao','preco').order_by('-id')
-        cached_produtos = [{'id': produto.id, 'nome_produto': produto.nome_produto, 'img': produto.img, 'descricao': produto.descricao,'promocao':produto.promocao, 'preco': produto.preco} for produto in produtos]
+        produtos = Produto.objects.filter(ativo=True).only('id', 'nome_produto', 'img', 'descricao','promocao','preco','categoria').order_by('-id')
+        cached_produtos = [{'id': produto.id, 'nome_produto': produto.nome_produto, 'img': produto.img, 'descricao': produto.descricao,'promocao':produto.promocao, 'preco': produto.preco, 'categoria':produto.categoria} for produto in produtos]
         cache.set('all_produtos', cached_produtos, timeout=1800)
     return cached_produtos
 
