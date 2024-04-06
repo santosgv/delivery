@@ -85,6 +85,9 @@ class Email(models.Model):
 
 class Unidade(models.Model):
     nome = models.CharField(max_length=100,null=True, blank=True)
+    logo = models.ImageField(upload_to='unidade_img')
+    imagem = models.ImageField(upload_to='unidade_img')
+    endereco= models.CharField(max_length=100,null=True, blank=True)
     horario_de = models.TimeField(auto_now=False, auto_now_add=False)
     horario_ate = models.TimeField(auto_now=False, auto_now_add=False)
     ativo = models.BooleanField(default=True)
@@ -92,4 +95,4 @@ class Unidade(models.Model):
     def __str__(self) -> str:
         return self.nome
     class Meta:
-        verbose_name_plural = "Horarios"
+        verbose_name_plural = "Unidade"

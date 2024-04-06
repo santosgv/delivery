@@ -4,7 +4,7 @@ from django.views.decorators.cache import cache_page
 from django.shortcuts import redirect, render
 from django.http import HttpResponse
 from .models import Pedido, ItemPedido, CupomDesconto
-from produto.views import get_status,get_categorias_com_contagem
+from produto.views import get_status,get_categorias_com_contagem,get_status
 from produto.models import Produto, Categoria,Bairro,Bairro
 from django.contrib.messages import constants
 from django.contrib import messages
@@ -135,6 +135,7 @@ def freteBairro(request):
         return HttpResponse(json.dumps({'status': 1}))
 
 def novo(request):
+    status = get_status()
     categorias = get_categorias_com_contagem()
     produtos={}
 
@@ -142,5 +143,6 @@ def novo(request):
         produtos[categoria['id'],categoria['categoria']]=Produto.objects.filter(ativo=True,categoria=categoria['id']).only('id', 'nome_produto', 'img', 'descricao','promocao','preco').order_by('-id')
 
     return render(request,'novo_html',{'produtos':produtos,
+                                       'status':status,
                                        })
 
