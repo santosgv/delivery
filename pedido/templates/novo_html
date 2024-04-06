@@ -86,7 +86,8 @@
 {% endfor %}
 
 <!-- modal -->
-<div class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify-center hidden">
+<div id="cart-modal"
+class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify-center hidden">
     <div class="bg-white p-5 rounded-md min-w-[90%] md:min-w-[600px]">
         <h2 class="text-center font-bold text-2x1 mb-2">Meu Carrinho</h2>
 
@@ -94,7 +95,7 @@
         <p class="font-bold">Total: <span id="cart-total">0.00</span></p>
 
         <p class="font-bold">Endereço de entrega:</p>
-        <input type="text" name="" id="address" class="w-full border-2 p-1 rouded my-1">
+        <input type="text" name="address" id="address" class="w-full border-2 p-1 rouded my-1">
         <p class="text-red-500 hidden" id="address-warn">Digite seu endereco completo</p>
 
         <div class="flex items-center justify-between mt-5 w-full">
@@ -110,13 +111,174 @@
 <footer class="w-full bg-red-500 py-3 fixed bottom-0 z-40 flex items-center justify-center">
     <button 
     class="flex items-center gap-2 text-white font-bold"
-    id="'cart-btn">
+    id="cart-btn">
         (<span id="cart-count">0</span>)
         Veja meu carrinho
         <i class="fa fa-cart-plus text-lg text-white"></i>
     </button>
 </footer>
 
+<script>
+    const menu = document.getElementById("menu")
+    const cartBtn = document.getElementById("cart-btn")
+    const cartModal = document.getElementById("cart-modal")
+    const cartItems = document.getElementById("card-items")
+    const cartTotal = document.getElementById("cart-total")
+    const cartModalCheckout = document.getElementById("checkout-btn")
+    const closeModal = document.getElementById("close-modal-btn")
+    const cartCout = document.getElementById("cart-count")
+    const cartEndereco = document.getElementById("address")
+    const cartAviso = document.getElementById("address-warn")
+
+    let cart = [];
+
+        // abrir modal
+    cartBtn.addEventListener("click",function(){
+        updateCartModal()
+        cartModal.style.display='flex'
+    })
+    // fim abrir modal
+
+    // fecha modal
+
+    cartModal.addEventListener("click",function(event){
+        if(event.target === cartModal){
+            cartModal.style.display="none"
+        }
+    })
+
+    closeModal.addEventListener("click",function(){
+        cartModal.style.display="none"
+    })
+
+    menu.addEventListener("click",function(event){
+        let parentbutton = event.target.closest(".add-to-cart-btn")
+
+        if (parentbutton){
+            const name = parentbutton.getAttribute("data-name")
+            const price =parseFloat(parentbutton.getAttribute("data-proce"))
+            addToCartt(name,price)
+        }
+    })
+
+    // add carrinho
+
+    function addToCartt(name,price){
+
+        const existingItem = cart.find(item =>item.name === name )
+
+        if(existingItem){
+            existingItem.quantity += 1;
+            
+        }else{
+
+            cart.push({
+            name,
+            price,
+            quantity:1,
+        })
+
+        }
+
+
+        updateCartModal()
+        
+
+    }
+
+    function updateCartModal(){
+
+        cartItems.innerHTML="";
+        let total =0;
+
+        cart.forEach(item =>{
+            const cartItemElement = document.createElement("div");
+            cartItemElement.classList.add("flex","justify-between","mb-4","flex-col")
+            cartItemElement.innerHTML=`
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="font-bold">${item.name}</p>
+                    <p>Qtd: ${item.quantity}</p>
+                    <p class="font-medium mt-2">R$ ${item.price.toFixed(2)}</p>
+                </div>
+            
+
+            <button class="remover-from-cart-btn" data-name="${item.name}">
+                Remover    
+            </button>    
+        </div>
+            `
+            total += item.price * item.quantity;
+
+            cartItems.appendChild(cartItemElement)
+        })
+
+        cartTotal.textContent=total.toLocaleString("pt-BR",{
+            style:"currency",
+            currency:"BRL"
+        });
+
+        cartCout.innerHTML = cart.length;
+
+    }
+
+    cartItems.addEventListener("click",function(event){
+        if(event.target.classList.contains("remover-from-cart-btn")){
+            const name= event.target.getAttribute("data-name")
+            removerItemCart(name);
+        }
+    })
+
+    function removerItemCart(name){
+        const index = cart.findIndex(item => item.name ===name);
+        if(index !== -1){
+            const item = cart[index];
+            if(item.quantity > 1){
+                item.quantity -= 1;
+                updateCartModal()
+                return;
+            }
+
+            cart.splice(index,1);
+            updateCartModal()
+        }
+    }
+
+    cartEndereco.addEventListener("input",function(event){
+        let inputValue = event.target.value;
+        if(inputValue !==""){
+            cartEndereco.classList.remove("border-red-500")
+            cartAviso.classList.add("hidden")
+        }
+    })
+
+    cartModalCheckout.addEventListener("click",function(){
+        if(cart.length === 0)return;
+        if(cartEndereco.value === ""){
+            cartAviso.classList.remove("hidden")
+            cartEndereco.classList.add("border-red-500")
+            return;
+        }
+    })
+
+    function checkRestautantOpen(){
+        const data =new Date();
+        const horas = data.getHours();
+        return horas >= 18 && horas < 22;
+    }
+
+    const spanItem = document.getElementById("date-span")
+    const isOpen= checkRestautantOpen();
+
+    if(isOpen){
+        spanItem.classList.remove("bg-red-500");
+        spanItem.classList.add("bg-green-600")
+    }else{
+        spanItem.classList.add("bg-red-500");
+        spanItem.classList.remove("bg-green-600")
+    }
+
+</script>
 </body>
 <style>
     body{
