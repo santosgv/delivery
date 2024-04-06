@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha512-Fo3rlrZj/k7ujTnHg4CGR2D7kSs0v4LLanw2qksYuRlEzO+tcaEPQogQ0KaoGN26/zrn20ImR1DfuLWnOo7aBA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <title>Lanches Gulão</title>
 </head>
@@ -43,7 +44,7 @@
                     <p class="text-sm">{{produto.descricao|slice:":30"}}</p>
                     <div class="flex items-center gap-2 justify-between mt-3">
                         <p class="font-bold text-lg">R$ {{produto.preco}}0</p>
-                        <butaton class="bg-gray-900 px-5 rounded add-to-cart-btn"
+                        <button class="bg-gray-900 px-5 rounded add-to-cart-btn"
                         data-name="{{produto.nome_produto}}"
                         data-proce="{{produto.preco}}0"
                         >
@@ -96,7 +97,7 @@ class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify
 
         <p class="font-bold">Endereço de entrega:</p>
         <input type="text" name="address" id="address" class="w-full border-2 p-1 rouded my-1">
-        <p class="text-red-500 hidden" id="address-warn">Digite seu endereco completo</p>
+        <p class="text-red-500 text-center hidden" id="address-warn">Digite seu endereco completo</p>
 
         <div class="flex items-center justify-between mt-5 w-full">
             <button id="close-modal-btn">Fechar</button>
@@ -117,7 +118,7 @@ class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify
         <i class="fa fa-cart-plus text-lg text-white"></i>
     </button>
 </footer>
-
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 <script>
     const menu = document.getElementById("menu")
     const cartBtn = document.getElementById("cart-btn")
@@ -167,11 +168,23 @@ class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify
 
         const existingItem = cart.find(item =>item.name === name )
 
+        Toastify({
+                text: "Adicionado!",
+                duration: 3000,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "rgb(0, 199, 0)",
+                },
+            }).showToast()
+
         if(existingItem){
             existingItem.quantity += 1;
             
         }else{
-
+            
             cart.push({
             name,
             price,
@@ -253,12 +266,48 @@ class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify
     })
 
     cartModalCheckout.addEventListener("click",function(){
+
+        const isOpen=checkRestautantOpen();
+
+
+         if(!isOpen){
+
+            Toastify({
+                text: "Restaurante Esta fechado!",
+                duration: 3000,
+                close: true,
+                gravity: "top", // `top` or `bottom`
+                position: "right", // `left`, `center` or `right`
+                stopOnFocus: true, // Prevents dismissing of toast on hover
+                style: {
+                    background: "#ef4444",
+                },
+            }).showToast()
+
+             return;
+         }
+
+
         if(cart.length === 0)return;
         if(cartEndereco.value === ""){
             cartAviso.classList.remove("hidden")
             cartEndereco.classList.add("border-red-500")
             return;
         }
+
+        // envia pedido zap
+        const cartItems =cart.map((item) =>{
+            return(
+                `${item.name} Quantidade: (${item.quantity}) Preço: R$${item.price} | `
+            )
+        }).join("")
+
+        const message=encodeURIComponent(cartItems)
+        const phone ="5531993839825"
+
+        window.open(`https://wa.me/${phone}?text=${message} Endereço:${cartEndereco.value}`,"_blank")
+        cart =[]
+        updateCartModal();
     })
 
     function checkRestautantOpen(){
@@ -283,6 +332,7 @@ class="bg-black/50 w-full h-full fixed top-0 left--0 z-[99] items-center justify
 <style>
     body{
         background-color: #f6f7f8;
+       
 
     }
     header{
