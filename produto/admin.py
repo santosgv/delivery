@@ -5,7 +5,7 @@ from .models import Categoria, Produto, Adicional, Opcoes,Contato,Email,Unidade
 
 @admin.register(Produto)
 class ProdutoAdmin(admin.ModelAdmin):
-    list_display = ('icone', 'nome_produto', 'categoria', 'preco', 'ativo')
+    list_display = ('icone', 'nome_produto', 'categoria', 'preco', 'ativo','promocao')
     list_editable = ('preco','ativo')
 
 

@@ -3,17 +3,17 @@ def main():
     fake = Faker()
     start_date = date(2024, 1, 1)
     end_date = date(2024, 12, 31)
-    #for _ in range(3):
-    #    categoria = Categoria.objects.create(
-    #        categoria=fake.name()
-    #    )
-    #    print(f'Categoria criada {categoria.categoria}')
+  #  for _ in range(3):
+  #      categoria = Categoria.objects.create(
+  #          categoria=fake.name()
+  #      )
+  #      print(f'Categoria criada {categoria.categoria}')
+#
 
-
-    for _ in range(random.randint(5, 10)):
+    for _ in range(random.randint(5, 8)):
        produto = Produto.objects.create(
            nome_produto=fake.name(),
-           img="post_img/produto2.jpg",
+           img="post_img/produto1.jpg",
            categoria=Categoria.objects.get(id=2),
            preco=random.randint(1, 50),
            descricao=fake.sentence(nb_words=20),
